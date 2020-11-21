@@ -9,7 +9,7 @@ namespace Spaceship
         [SerializeField] int health = 10;
         [SerializeField] float velocity = 9;
         [SerializeField] [AssetsOnly] GameObject bullet;
-        [SerializeField] Transform bulletAnker;
+        [SerializeField] Transform bulletAnchor;
         [SerializeField] float shootingInterval = 0.3f;
         [SerializeField, AssetsOnly, Required] GameObject destroyEffects;
 
@@ -23,7 +23,7 @@ namespace Spaceship
         {
             _gameManager = FindObjectOfType<GameManager>();
             _rb = GetComponent<Rigidbody2D>();
-            _bulletStartPos = bulletAnker.transform.position;
+            _bulletStartPos = bulletAnchor.transform.position;
         }
 
         void Update()
@@ -60,7 +60,7 @@ namespace Spaceship
                     //Debug.Log("Dead, Spaceship has no health anymore");
                     FindObjectOfType<GameManager>()?.DecreaseLives();
                     //Destroy(gameObject);
-                    //TODO: Flacker and be immutable for few seconds
+                    //TODO: Flicker and be immutable for few seconds
                     if (GameManager.CurrentLives <=0)
                     {
                         Destroy(gameObject);
@@ -73,7 +73,7 @@ namespace Spaceship
             //Single Shot
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                _bulletStartPos = bulletAnker.transform.position;
+                _bulletStartPos = bulletAnchor.transform.position;
                 GenerateBullet();
             }
 
@@ -86,7 +86,7 @@ namespace Spaceship
                 }
                 else
                 {
-                    _bulletStartPos = bulletAnker.transform.position;
+                    _bulletStartPos = bulletAnchor.transform.position;
                     GenerateBullet();
                     _currentInterval = shootingInterval;
                 }
