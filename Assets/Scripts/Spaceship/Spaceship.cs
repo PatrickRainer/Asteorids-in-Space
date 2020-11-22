@@ -1,145 +1,152 @@
+using CoreMechanics.InputSystem;
 using GameManagers;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Spaceship
+namespace SpaceshipMechanics
 {
     public class Spaceship : MonoBehaviour
     {
         [SerializeField] int health = 10;
-        [SerializeField] float velocity = 9;
+        [SerializeField] float maxThrottle = 3;
         [SerializeField] [AssetsOnly] GameObject bullet;
-        [SerializeField] Transform bulletAnker;
+        [SerializeField] Transform bulletAnchor;
         [SerializeField] float shootingInterval = 0.3f;
-        [SerializeField, AssetsOnly, Required] GameObject destroyEffects;
+
+        [SerializeField] float rotationDeadZone = 0.2f;
+
+        [SerializeField] float rotationSpeed = 200f;
+
+        [SerializeField] [AssetsOnly] [Required]
+        GameObject destroyEffects;
 
         Vector3 _bulletStartPos;
-        float _currentInterval;
-        Rigidbody2D _rb;
         int _colObjID;
+        float _currentShootInterval;
         GameManager _gameManager;
+        InputListener _input;
+        Rigidbody2D _rb;
+        [ReadOnly] float currentThrottle = 0;
 
         void Start()
         {
             _gameManager = FindObjectOfType<GameManager>();
+            _input = FindObjectOfType<InputListener>();
+            FindObjectOfType<MouseListener>();
+
             _rb = GetComponent<Rigidbody2D>();
-            _bulletStartPos = bulletAnker.transform.position;
+            _bulletStartPos = bulletAnchor.transform.position;
+
+            _input.ShootButtonPressed += ShootBullet;
+            _input.UpButtonPressed += IncreaseThrottle;
+            _input.DownButtonPressed += DecreaseThrottle;
+            _input.MousePositionChanged += RotateToMousePosition;
         }
+
+        void OnDisable()
+        {
+            _input.ShootButtonPressed -= ShootBullet;
+            _input.UpButtonPressed -= IncreaseThrottle;
+            _input.DownButtonPressed -= DecreaseThrottle;
+            _input.MousePositionChanged -= RotateToMousePosition;
+        }
+
+        void RotateToMousePosition(Vector3 mousePos)
+        {
+            if (!MouseListener.IsMouseOnScreen()) return;
+
+            var relativeMousePos = transform.InverseTransformPoint(mousePos);
+            var isMouseInDeadZone =
+                relativeMousePos.x > 0f - rotationDeadZone && relativeMousePos.x < 0f + rotationDeadZone;
+
+            if (isMouseInDeadZone)
+            {
+                return;
+            }
+            else if (relativeMousePos.x < 0f)
+            {
+                _rb.MoveRotation(_rb.rotation + rotationSpeed * Time.fixedDeltaTime);
+            }
+            else if (relativeMousePos.x > 0f)
+            {
+                _rb.MoveRotation(_rb.rotation + -rotationSpeed * Time.fixedDeltaTime);
+            }
+        }
+
 
         void Update()
         {
-            Movement();
+            _currentShootInterval -= Time.deltaTime;
+        }
 
-            Shoot();
+        void FixedUpdate()
+        {
+            _rb.MovePosition(transform.position + transform.up * (Time.fixedDeltaTime * currentThrottle));
         }
 
         void OnDestroy()
         {
             if (GameManager.IsSceneUnloading) return;
 
-           var go = Instantiate(destroyEffects);
-           Destroy(go, 3);
+            var go = Instantiate(destroyEffects);
+            Destroy(go, 3);
         }
 
         void OnTriggerEnter2D(Collider2D other)
         {
             var collidingObject = other.gameObject;
 
-            if (collidingObject.GetInstanceID()==_colObjID) return; // Same Object collided twice
+            if (collidingObject.GetInstanceID() == _colObjID) return; // Same Object collided twice
 
             _colObjID = collidingObject.GetInstanceID();
-            
-            if (collidingObject.layer==11) return;
-            
-            
+
+            if (collidingObject.layer == 11) return;
+
+
             //Debug.Log("Collision with SpaceShip");
 
-                health -= 1;
-                if (health <= 0)
-                {
-                    //Debug.Log("Dead, Spaceship has no health anymore");
-                    FindObjectOfType<GameManager>()?.DecreaseLives();
-                    //Destroy(gameObject);
-                    //TODO: Flacker and be immutable for few seconds
-                    if (GameManager.CurrentLives <=0)
-                    {
-                        Destroy(gameObject);
-                    }
-                }
-        }
-
-        void Shoot()
-        {
-            //Single Shot
-            if (Input.GetKeyDown(KeyCode.Space))
+            health -= 1;
+            if (health <= 0)
             {
-                _bulletStartPos = bulletAnker.transform.position;
-                GenerateBullet();
-            }
-
-            //Static Shooting
-            if (Input.GetKey(KeyCode.Space))
-            {
-                if (_currentInterval > 0)
-                {
-                    _currentInterval -= Time.deltaTime;
-                }
-                else
-                {
-                    _bulletStartPos = bulletAnker.transform.position;
-                    GenerateBullet();
-                    _currentInterval = shootingInterval;
-                }
+                //Debug.Log("Dead, Spaceship has no health anymore");
+                FindObjectOfType<GameManager>()?.DecreaseLives();
+                //Destroy(gameObject);
+                //TODO: Flicker and be immutable for few seconds
+                if (GameManager.CurrentLives <= 0) Destroy(gameObject);
             }
         }
 
-        void GenerateBullet()
+        void IncreaseThrottle()
         {
-            Instantiate(bullet, _bulletStartPos, Quaternion.identity);
+            if (currentThrottle < maxThrottle)
+            {
+                currentThrottle = currentThrottle + Time.deltaTime;
+                currentThrottle = Mathf.Clamp(currentThrottle, 0, maxThrottle);
+            }
         }
 
-
-        void Movement()
+        void DecreaseThrottle()
         {
-            // Left and Up
-            if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.W))
+            if (currentThrottle > 0)
             {
-                _rb.MovePosition(_rb.position + new Vector2(-1, 1) * (velocity * Time.deltaTime));
+                currentThrottle = currentThrottle - Time.deltaTime;
+                currentThrottle = Mathf.Clamp(currentThrottle, 0, maxThrottle);
             }
+        }
 
-            // Left and Down
-            else if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.S))
+        void ShootBullet()
+        {
+            if (_currentShootInterval <= 0)
             {
-                _rb.MovePosition(_rb.position + new Vector2(-1, -1) * (velocity * Time.deltaTime));
+                _bulletStartPos = bulletAnchor.transform.position;
+                Instantiate(bullet, _bulletStartPos, transform.rotation);
+                _currentShootInterval = shootingInterval;
             }
+        }
 
-            // Right and Up
-            else if (Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.W))
-            {
-                _rb.MovePosition(_rb.position + new Vector2(1, 1) * (velocity * Time.deltaTime));
-            }
-
-            // Right and Down
-            else if (Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.S))
-            {
-                _rb.MovePosition(_rb.position + new Vector2(1, -1) * (velocity * Time.deltaTime));
-            }
-
-            //Left
-            else if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
-                _rb.MovePosition(_rb.position + new Vector2(-1, 0) * (velocity * Time.deltaTime));
-
-            // Right
-            else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
-                _rb.MovePosition(_rb.position + new Vector2(1, 0) * (velocity * Time.deltaTime));
-
-            // Up
-            else if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
-                _rb.MovePosition(_rb.position + new Vector2(0, 1) * (velocity * Time.deltaTime));
-
-            // Down
-            else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
-                _rb.MovePosition(_rb.position + new Vector2(0, -1) * (velocity * Time.deltaTime));
+        public float GetCurrentThrottlePercentage()
+        {
+            return 100 / maxThrottle * currentThrottle / 100;
         }
     }
 }
