@@ -236,6 +236,7 @@ MonoBehaviour:
   - {fileID: 4533506972452793427, guid: b3ef802b24fe398458a046321924ed79, type: 3}
   - {fileID: 1491064215441645341, guid: 9e345794f9890254db22d5100cec676d, type: 3}
   - {fileID: 7645918806455128459, guid: 6628555eaf45e5243923f2ba840764a1, type: 3}
+  spawnExtraRadius: 0.5
 --- !u!1 &272531225
 GameObject:
   m_ObjectHideFlags: 0
