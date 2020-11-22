@@ -30,7 +30,7 @@ namespace Ui
 
            if (_currentSpaceship != null)
            {
-               throttleBar.fillAmount = _currentSpaceship.currentThrottle;
+               throttleBar.fillAmount = _currentSpaceship.GetCurrentThrottlePercentage();
            }
            else
            {

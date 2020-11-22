@@ -1,10 +1,5 @@
-using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using CoreMechanics;
 using CoreMechanics.InputSystem;
 using GameManagers;
-using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -13,15 +8,17 @@ namespace SpaceshipMechanics
     public class Spaceship : MonoBehaviour
     {
         [SerializeField] int health = 10;
-        [SerializeField] float velocity = 9;
-        [SerializeField] float maxThrottle = 1;
+        [SerializeField] float maxThrottle = 3;
         [SerializeField] [AssetsOnly] GameObject bullet;
         [SerializeField] Transform bulletAnchor;
         [SerializeField] float shootingInterval = 0.3f;
 
+        [SerializeField] float rotationDeadZone = 0.2f;
+
+        [SerializeField] float rotationSpeed = 200f;
+
         [SerializeField] [AssetsOnly] [Required]
         GameObject destroyEffects;
-
 
         Vector3 _bulletStartPos;
         int _colObjID;
@@ -29,12 +26,13 @@ namespace SpaceshipMechanics
         GameManager _gameManager;
         InputListener _input;
         Rigidbody2D _rb;
-        [Sirenix.OdinInspector.ReadOnly] public float currentThrottle = 0;
+        [ReadOnly] float currentThrottle = 0;
 
         void Start()
         {
             _gameManager = FindObjectOfType<GameManager>();
             _input = FindObjectOfType<InputListener>();
+            FindObjectOfType<MouseListener>();
 
             _rb = GetComponent<Rigidbody2D>();
             _bulletStartPos = bulletAnchor.transform.position;
@@ -55,12 +53,24 @@ namespace SpaceshipMechanics
 
         void RotateToMousePosition(Vector3 mousePos)
         {
-            //Debug.Log("Rotate");
+            if (!MouseListener.IsMouseOnScreen()) return;
 
-            var lookPos = mousePos;
-            lookPos -= transform.position;
-            var angle = (Mathf.Atan2(lookPos.y, lookPos.x) * Mathf.Rad2Deg) - 90;
-            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            var relativeMousePos = transform.InverseTransformPoint(mousePos);
+            var isMouseInDeadZone =
+                relativeMousePos.x > 0f - rotationDeadZone && relativeMousePos.x < 0f + rotationDeadZone;
+
+            if (isMouseInDeadZone)
+            {
+                return;
+            }
+            else if (relativeMousePos.x < 0f)
+            {
+                _rb.MoveRotation(_rb.rotation + rotationSpeed * Time.fixedDeltaTime);
+            }
+            else if (relativeMousePos.x > 0f)
+            {
+                _rb.MoveRotation(_rb.rotation + -rotationSpeed * Time.fixedDeltaTime);
+            }
         }
 
 
@@ -71,7 +81,7 @@ namespace SpaceshipMechanics
 
         void FixedUpdate()
         {
-            _rb.AddForce(transform.up * currentThrottle);
+            _rb.MovePosition(transform.position + transform.up * (Time.fixedDeltaTime * currentThrottle));
         }
 
         void OnDestroy()
@@ -132,6 +142,11 @@ namespace SpaceshipMechanics
                 Instantiate(bullet, _bulletStartPos, transform.rotation);
                 _currentShootInterval = shootingInterval;
             }
+        }
+
+        public float GetCurrentThrottlePercentage()
+        {
+            return 100 / maxThrottle * currentThrottle / 100;
         }
     }
 }

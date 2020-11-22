@@ -28,5 +28,18 @@ namespace CoreMechanics.InputSystem
             if (Input.mousePosition != _currentMousePosition) MousePositionChanged.Invoke(_worldMousePosition);
             //Debug.Log(MousePosition.ToString());
         }
+
+        public static bool IsMouseOnScreen()
+        {
+            var screenRect = new Rect(0,0, Screen.width, Screen.height);
+            if (!screenRect.Contains(Input.mousePosition))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
     }
 }

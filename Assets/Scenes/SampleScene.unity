@@ -2347,6 +2347,11 @@ PrefabInstance:
       propertyPath: m_Interpolate
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2113555127576666649, guid: f34c5c0d2980c0742a4e278b78f67de6,
+        type: 3}
+      propertyPath: m_BodyType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2113555127576666650, guid: f34c5c0d2980c0742a4e278b78f67de6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2401,6 +2406,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2113555127576666651, guid: f34c5c0d2980c0742a4e278b78f67de6,
+        type: 3}
+      propertyPath: maxThrottle
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f34c5c0d2980c0742a4e278b78f67de6, type: 3}
