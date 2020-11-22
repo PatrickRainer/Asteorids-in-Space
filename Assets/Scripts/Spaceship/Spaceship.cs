@@ -129,7 +129,7 @@ namespace SpaceshipMechanics
             if (_currentShootInterval <= 0)
             {
                 _bulletStartPos = bulletAnchor.transform.position;
-                Instantiate(bullet, _bulletStartPos, Quaternion.identity);
+                Instantiate(bullet, _bulletStartPos, transform.rotation);
                 _currentShootInterval = shootingInterval;
             }
         }
