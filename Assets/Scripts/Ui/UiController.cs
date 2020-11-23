@@ -1,7 +1,7 @@
 using System;
 using GameManagers;
 using Sirenix.OdinInspector;
-using SpaceshipMechanics;
+using Spaceships;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;

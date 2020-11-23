@@ -3,30 +3,27 @@ using GameManagers;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace SpaceshipMechanics
+namespace Spaceships
 {
     public class Spaceship : MonoBehaviour
     {
         [SerializeField] int health = 10;
         [SerializeField] float maxThrottle = 3;
-        [SerializeField] [AssetsOnly] GameObject bullet;
-        [SerializeField] Transform bulletAnchor;
         [SerializeField] float shootingInterval = 0.3f;
-
         [SerializeField] float rotationDeadZone = 0.2f;
-
         [SerializeField] float rotationSpeed = 200f;
-
+        [SerializeField] [Required] Transform bulletAnchor;
+        [SerializeField] [AssetsOnly] [Required]
+        GameObject bullet;
         [SerializeField] [AssetsOnly] [Required]
         GameObject destroyEffects;
 
-        Vector3 _bulletStartPos;
         int _colObjID;
         float _currentShootInterval;
+        [ShowInInspector] [ReadOnly] float _currentThrottle;
         GameManager _gameManager;
         InputListener _input;
         Rigidbody2D _rb;
-        [ReadOnly] float currentThrottle = 0;
 
         void Start()
         {
@@ -35,42 +32,11 @@ namespace SpaceshipMechanics
             FindObjectOfType<MouseListener>();
 
             _rb = GetComponent<Rigidbody2D>();
-            _bulletStartPos = bulletAnchor.transform.position;
 
             _input.ShootButtonPressed += ShootBullet;
             _input.UpButtonPressed += IncreaseThrottle;
             _input.DownButtonPressed += DecreaseThrottle;
             _input.MousePositionChanged += RotateToMousePosition;
-        }
-
-        void OnDisable()
-        {
-            _input.ShootButtonPressed -= ShootBullet;
-            _input.UpButtonPressed -= IncreaseThrottle;
-            _input.DownButtonPressed -= DecreaseThrottle;
-            _input.MousePositionChanged -= RotateToMousePosition;
-        }
-
-        void RotateToMousePosition(Vector3 mousePos)
-        {
-            if (!MouseListener.IsMouseOnScreen()) return;
-
-            var relativeMousePos = transform.InverseTransformPoint(mousePos);
-            var isMouseInDeadZone =
-                relativeMousePos.x > 0f - rotationDeadZone && relativeMousePos.x < 0f + rotationDeadZone;
-
-            if (isMouseInDeadZone)
-            {
-                return;
-            }
-            else if (relativeMousePos.x < 0f)
-            {
-                _rb.MoveRotation(_rb.rotation + rotationSpeed * Time.fixedDeltaTime);
-            }
-            else if (relativeMousePos.x > 0f)
-            {
-                _rb.MoveRotation(_rb.rotation + -rotationSpeed * Time.fixedDeltaTime);
-            }
         }
 
 
@@ -81,7 +47,15 @@ namespace SpaceshipMechanics
 
         void FixedUpdate()
         {
-            _rb.MovePosition(transform.position + transform.up * (Time.fixedDeltaTime * currentThrottle));
+            _rb.MovePosition(transform.position + transform.up * (Time.fixedDeltaTime * _currentThrottle));
+        }
+
+        void OnDisable()
+        {
+            _input.ShootButtonPressed -= ShootBullet;
+            _input.UpButtonPressed -= IncreaseThrottle;
+            _input.DownButtonPressed -= DecreaseThrottle;
+            _input.MousePositionChanged -= RotateToMousePosition;
         }
 
         void OnDestroy()
@@ -116,21 +90,36 @@ namespace SpaceshipMechanics
             }
         }
 
+        void RotateToMousePosition(Vector3 mousePos)
+        {
+            if (!MouseListener.IsMouseOnScreen()) return;
+
+            var relativeMousePos = transform.InverseTransformPoint(mousePos);
+            var isMouseInDeadZone =
+                relativeMousePos.x > 0f - rotationDeadZone && relativeMousePos.x < 0f + rotationDeadZone;
+
+            if (isMouseInDeadZone)
+                return;
+            if (relativeMousePos.x < 0f)
+                _rb.MoveRotation(_rb.rotation + rotationSpeed * Time.fixedDeltaTime);
+            else if (relativeMousePos.x > 0f) _rb.MoveRotation(_rb.rotation + -rotationSpeed * Time.fixedDeltaTime);
+        }
+
         void IncreaseThrottle()
         {
-            if (currentThrottle < maxThrottle)
+            if (_currentThrottle < maxThrottle)
             {
-                currentThrottle = currentThrottle + Time.deltaTime;
-                currentThrottle = Mathf.Clamp(currentThrottle, 0, maxThrottle);
+                _currentThrottle = _currentThrottle + Time.deltaTime;
+                _currentThrottle = Mathf.Clamp(_currentThrottle, 0, maxThrottle);
             }
         }
 
         void DecreaseThrottle()
         {
-            if (currentThrottle > 0)
+            if (_currentThrottle > 0)
             {
-                currentThrottle = currentThrottle - Time.deltaTime;
-                currentThrottle = Mathf.Clamp(currentThrottle, 0, maxThrottle);
+                _currentThrottle = _currentThrottle - Time.deltaTime;
+                _currentThrottle = Mathf.Clamp(_currentThrottle, 0, maxThrottle);
             }
         }
 
@@ -138,15 +127,15 @@ namespace SpaceshipMechanics
         {
             if (_currentShootInterval <= 0)
             {
-                _bulletStartPos = bulletAnchor.transform.position;
-                Instantiate(bullet, _bulletStartPos, transform.rotation);
+               var bulletStartPos = bulletAnchor.transform.position;
+                Instantiate(bullet, bulletStartPos, transform.rotation);
                 _currentShootInterval = shootingInterval;
             }
         }
 
         public float GetCurrentThrottlePercentage()
         {
-            return 100 / maxThrottle * currentThrottle / 100;
+            return 100 / maxThrottle * _currentThrottle / 100;
         }
     }
 }
