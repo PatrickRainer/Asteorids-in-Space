@@ -11,10 +11,12 @@ namespace Spaceships
         [SerializeField] int health = 10;
         [SerializeField] float maxThrottle = 3;
         [SerializeField] float throttleSensibility = 1;
+        [SerializeField] float throttleDecreaseSensibility = 3;
         [SerializeField] float shootingInterval = 0.3f;
         [SerializeField] float rotationDeadZone = 0.2f;
         [SerializeField] float rotationSpeed = 200f;
         [SerializeField] [Required] Transform bulletAnchor;
+
 
         [SerializeField] [AssetsOnly] [Required]
         GameObject bullet;
@@ -140,7 +142,7 @@ namespace Spaceships
         {
             if (_currentThrottle > 0)
             {
-                _currentThrottle = _currentThrottle - Time.deltaTime * throttleSensibility;
+                _currentThrottle = _currentThrottle - Time.deltaTime * throttleDecreaseSensibility;
                 _currentThrottle = Mathf.Clamp(_currentThrottle, 0, maxThrottle);
             }
         }
