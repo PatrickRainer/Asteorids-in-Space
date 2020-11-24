@@ -29,6 +29,7 @@ namespace Spaceships
         InputListener _input;
         Rigidbody2D _rb;
         bool _isThrottling;
+        bool _isRotating = true;
 
         void Start()
         {
@@ -43,6 +44,7 @@ namespace Spaceships
             _input.ThrottleButtonReleased += () => { _isThrottling = false; };
             _input.BrakeButtonPressed += DecreaseThrottle;
             _input.MousePositionChanged += RotateToMousePosition;
+            _input.RotateButtonDown += delegate { _isRotating = !_isRotating; };
         }
 
         void OnEnable()
@@ -109,8 +111,10 @@ namespace Spaceships
 
         void RotateToMousePosition(Vector3 mousePos)
         {
+            if (!_isRotating) return;
+            
             if (!MouseListener.IsMouseOnScreen()) return;
-
+            
             var relativeMousePos = transform.InverseTransformPoint(mousePos);
             var isMouseInDeadZone =
                 relativeMousePos.x > 0f - rotationDeadZone && relativeMousePos.x < 0f + rotationDeadZone;
