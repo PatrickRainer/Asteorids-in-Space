@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace CoreMechanics.InputSystem
 { //TODO: Should depend on input scheme
@@ -20,6 +21,9 @@ namespace CoreMechanics.InputSystem
 
         public UnityAction ThrottleButtonPressed = delegate { };
         public UnityAction ThrottleButtonReleased = delegate { };
+        public UnityAction RotateButtonPressed = delegate { };
+        public UnityAction RotateButtonReleased = delegate { };
+        public UnityAction RotateButtonDown= delegate { };
 
         void Awake()
         {
@@ -36,6 +40,9 @@ namespace CoreMechanics.InputSystem
             if (Input.GetKey(KeyCode.W)) ThrottleButtonPressed.Invoke();
             if (Input.GetKeyUp(KeyCode.W)) ThrottleButtonReleased.Invoke();
             if (Input.GetKey(KeyCode.S)) BrakeButtonPressed.Invoke();
+            if (Input.GetKey(KeyCode.LeftAlt)) RotateButtonPressed.Invoke();
+            if (Input.GetKeyUp(KeyCode.LeftAlt)) RotateButtonReleased.Invoke();
+            if (Input.GetKeyDown(KeyCode.LeftAlt)) RotateButtonDown.Invoke();
         }
     }
 }
