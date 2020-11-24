@@ -6,7 +6,7 @@ namespace CoreMechanics.InputSystem
     public class InputListener : MonoBehaviour
     {
         MouseListener _mouseListener;
-        public UnityAction DownButtonPressed = delegate { };
+        public UnityAction BrakeButtonPressed = delegate { };
         public UnityAction LeftButtonPressed = delegate { };
 
         public UnityAction<Vector3> MousePositionChanged = delegate(Vector3 arg0) {  };
@@ -18,7 +18,8 @@ namespace CoreMechanics.InputSystem
             /*Debug.Log("Shoot Key");*/
         };
 
-        public UnityAction UpButtonPressed = delegate { };
+        public UnityAction ThrottleButtonPressed = delegate { };
+        public UnityAction ThrottleButtonReleased = delegate { };
 
         void Awake()
         {
@@ -32,8 +33,9 @@ namespace CoreMechanics.InputSystem
 
             if (Input.GetKey(KeyCode.A)) LeftButtonPressed.Invoke();
             if (Input.GetKey(KeyCode.D)) RightButtonPressed.Invoke();
-            if (Input.GetKey(KeyCode.W)) UpButtonPressed.Invoke();
-            if (Input.GetKey(KeyCode.S)) DownButtonPressed.Invoke();
+            if (Input.GetKey(KeyCode.W)) ThrottleButtonPressed.Invoke();
+            if (Input.GetKeyUp(KeyCode.W)) ThrottleButtonReleased.Invoke();
+            if (Input.GetKey(KeyCode.S)) BrakeButtonPressed.Invoke();
         }
     }
 }

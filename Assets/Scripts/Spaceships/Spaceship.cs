@@ -1,3 +1,4 @@
+using System;
 using CoreMechanics.InputSystem;
 using GameManagers;
 using Sirenix.OdinInspector;
@@ -9,12 +10,15 @@ namespace Spaceships
     {
         [SerializeField] int health = 10;
         [SerializeField] float maxThrottle = 3;
+        [SerializeField] float throttleSensibility = 1;
         [SerializeField] float shootingInterval = 0.3f;
         [SerializeField] float rotationDeadZone = 0.2f;
         [SerializeField] float rotationSpeed = 200f;
         [SerializeField] [Required] Transform bulletAnchor;
+
         [SerializeField] [AssetsOnly] [Required]
         GameObject bullet;
+
         [SerializeField] [AssetsOnly] [Required]
         GameObject destroyEffects;
 
@@ -24,6 +28,7 @@ namespace Spaceships
         GameManager _gameManager;
         InputListener _input;
         Rigidbody2D _rb;
+        bool _isThrottling;
 
         void Start()
         {
@@ -34,11 +39,17 @@ namespace Spaceships
             _rb = GetComponent<Rigidbody2D>();
 
             _input.ShootButtonPressed += ShootBullet;
-            _input.UpButtonPressed += IncreaseThrottle;
-            _input.DownButtonPressed += DecreaseThrottle;
+            _input.ThrottleButtonPressed += IncreaseThrottle;
+            _input.ThrottleButtonReleased += () => { _isThrottling = false; };
+            _input.BrakeButtonPressed += DecreaseThrottle;
             _input.MousePositionChanged += RotateToMousePosition;
         }
 
+        void OnEnable()
+        {
+
+            
+        }
 
         void Update()
         {
@@ -48,13 +59,19 @@ namespace Spaceships
         void FixedUpdate()
         {
             _rb.MovePosition(transform.position + transform.up * (Time.fixedDeltaTime * _currentThrottle));
+
+            if (!_isThrottling)
+            {
+               DecreaseThrottle(); 
+            }
+            
         }
 
         void OnDisable()
         {
             _input.ShootButtonPressed -= ShootBullet;
-            _input.UpButtonPressed -= IncreaseThrottle;
-            _input.DownButtonPressed -= DecreaseThrottle;
+            _input.ThrottleButtonPressed -= IncreaseThrottle;
+            _input.BrakeButtonPressed -= DecreaseThrottle;
             _input.MousePositionChanged -= RotateToMousePosition;
         }
 
@@ -107,9 +124,10 @@ namespace Spaceships
 
         void IncreaseThrottle()
         {
+            _isThrottling = true;
             if (_currentThrottle < maxThrottle)
             {
-                _currentThrottle = _currentThrottle + Time.deltaTime;
+                _currentThrottle = _currentThrottle + Time.deltaTime * throttleSensibility;
                 _currentThrottle = Mathf.Clamp(_currentThrottle, 0, maxThrottle);
             }
         }
@@ -118,7 +136,7 @@ namespace Spaceships
         {
             if (_currentThrottle > 0)
             {
-                _currentThrottle = _currentThrottle - Time.deltaTime;
+                _currentThrottle = _currentThrottle - Time.deltaTime * throttleSensibility;
                 _currentThrottle = Mathf.Clamp(_currentThrottle, 0, maxThrottle);
             }
         }
