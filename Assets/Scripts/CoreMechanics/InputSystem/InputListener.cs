@@ -34,6 +34,7 @@ namespace CoreMechanics.InputSystem
         void Update()
         {
             if (Input.GetKey(KeyCode.Space)) ShootButtonPressed.Invoke();
+            if (Input.GetMouseButton(0)) ShootButtonPressed.Invoke();
 
             if (Input.GetKey(KeyCode.A)) LeftButtonPressed.Invoke();
             if (Input.GetKey(KeyCode.D)) RightButtonPressed.Invoke();
