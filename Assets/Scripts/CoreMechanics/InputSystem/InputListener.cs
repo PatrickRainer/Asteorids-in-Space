@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace CoreMechanics.InputSystem
 { //TODO: Should depend on input scheme
     public class InputListener : MonoBehaviour
     {
         MouseListener _mouseListener;
-        public UnityAction DownButtonPressed = delegate { };
+        public UnityAction BrakeButtonPressed = delegate { };
         public UnityAction LeftButtonPressed = delegate { };
 
         public UnityAction<Vector3> MousePositionChanged = delegate(Vector3 arg0) {  };
@@ -18,7 +19,11 @@ namespace CoreMechanics.InputSystem
             /*Debug.Log("Shoot Key");*/
         };
 
-        public UnityAction UpButtonPressed = delegate { };
+        public UnityAction ThrottleButtonPressed = delegate { };
+        public UnityAction ThrottleButtonReleased = delegate { };
+        public UnityAction RotateButtonPressed = delegate { };
+        public UnityAction RotateButtonReleased = delegate { };
+        public UnityAction RotateButtonDown= delegate { };
 
         void Awake()
         {
@@ -29,11 +34,16 @@ namespace CoreMechanics.InputSystem
         void Update()
         {
             if (Input.GetKey(KeyCode.Space)) ShootButtonPressed.Invoke();
+            if (Input.GetMouseButton(0)) ShootButtonPressed.Invoke();
 
             if (Input.GetKey(KeyCode.A)) LeftButtonPressed.Invoke();
             if (Input.GetKey(KeyCode.D)) RightButtonPressed.Invoke();
-            if (Input.GetKey(KeyCode.W)) UpButtonPressed.Invoke();
-            if (Input.GetKey(KeyCode.S)) DownButtonPressed.Invoke();
+            if (Input.GetKey(KeyCode.W)) ThrottleButtonPressed.Invoke();
+            if (Input.GetKeyUp(KeyCode.W)) ThrottleButtonReleased.Invoke();
+            if (Input.GetKey(KeyCode.S)) BrakeButtonPressed.Invoke();
+            if (Input.GetKey(KeyCode.LeftAlt)) RotateButtonPressed.Invoke();
+            if (Input.GetKeyUp(KeyCode.LeftAlt)) RotateButtonReleased.Invoke();
+            if (Input.GetKeyDown(KeyCode.LeftAlt)) RotateButtonDown.Invoke();
         }
     }
 }

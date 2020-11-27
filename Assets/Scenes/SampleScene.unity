@@ -236,6 +236,7 @@ MonoBehaviour:
   - {fileID: 4533506972452793427, guid: b3ef802b24fe398458a046321924ed79, type: 3}
   - {fileID: 1491064215441645341, guid: 9e345794f9890254db22d5100cec676d, type: 3}
   - {fileID: 7645918806455128459, guid: 6628555eaf45e5243923f2ba840764a1, type: 3}
+  spawnExtraRadius: 0.5
 --- !u!1 &272531225
 GameObject:
   m_ObjectHideFlags: 0
@@ -2159,7 +2160,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -146.87}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1972889046
@@ -2181,9 +2182,14 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Move = WASD
+  m_text: 'Throttle = W
 
-    Shoot = SPACE'
+    Shoot = SPACE or Mouse Button
+
+    Rotate = Mouse Movement
+
+    Rotation
+    Lock = Alt Key'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2225,10 +2231,10 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
-  m_firstOverflowCharacterIndex: -1
+  m_firstOverflowCharacterIndex: 43
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
   m_isTextTruncated: 0
@@ -2252,12 +2258,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1972889046}
-    characterCount: 25
+    characterCount: 90
     spriteCount: 0
-    spaceCount: 5
-    wordCount: 4
+    spaceCount: 17
+    wordCount: 14
     linkCount: 0
-    lineCount: 2
+    lineCount: 4
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
@@ -2360,7 +2366,7 @@ PrefabInstance:
     - target: {fileID: 2113555127576666650, guid: f34c5c0d2980c0742a4e278b78f67de6,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.05
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2113555127576666650, guid: f34c5c0d2980c0742a4e278b78f67de6,
         type: 3}

@@ -65,5 +65,18 @@ namespace CoreMechanics
             var result = _mainCamera.ScreenToWorldPoint(new Vector3((Screen.width), (Screen.height), 0));
             return result;
         }
+
+        public static float GetDistanceToScreenEdge()
+        {
+            float distance = 0;
+            
+            Camera mainCam = Camera.main;
+            if (mainCam == null) return distance;
+
+            Vector2 diagonalScreenEdge = mainCam.ViewportToWorldPoint(new Vector3(1, 1, mainCam.nearClipPlane));
+
+            distance = Vector2.Distance(diagonalScreenEdge, Vector2.zero);
+            return distance;
+        }
     }
 }

@@ -1,5 +1,4 @@
 using Bullets;
-using CoreMechanics;
 using GameManagers;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
@@ -7,26 +6,39 @@ using UnityEngine;
 
 namespace Asteroids
 {
-    public class Asteroid : StraightMover
+    public class Asteroid : MonoBehaviour
     {
         [SerializeField] int health = 2;
         [SerializeField] int scorePoints = 1;
         [SerializeField] int rotationSpeed = 100;
         [SerializeField] [AssetsOnly] GameObject destroyPrefab;
+        Vector2 _originLookDir;
+        Rigidbody2D _rb;
 
         Rotator _rotator;
 
-
-        protected override void Start()
+        void Awake()
         {
-            base.Start();
-            _rotator = new Rotator(GetComponent<Rigidbody2D>(), rotationSpeed);
+            _rb = GetComponent<Rigidbody2D>();
         }
 
-        protected override void FixedUpdate()
+        protected void Start()
         {
-            base.FixedUpdate();
+            _rotator = new Rotator(GetComponent<Rigidbody2D>(), rotationSpeed);
+
+            // Look to middle of the screen
+            var dir = Vector3.zero - transform.position;
+            var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
+            _originLookDir = dir.normalized;
+        }
+
+        protected void FixedUpdate()
+        {
             _rotator.Rotate();
+
+            Move();
         }
 
         void OnDestroy()
@@ -53,6 +65,12 @@ namespace Asteroids
             }
 
             if (health <= 0) Destroy(gameObject);
+        }
+
+        void Move()
+        {
+            Vector2 dir = (Vector3.zero - transform.position).normalized;
+            _rb.MovePosition(_rb.position + _originLookDir * Time.fixedDeltaTime);
         }
     }
 }
