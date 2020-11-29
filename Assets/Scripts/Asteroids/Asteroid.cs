@@ -12,7 +12,7 @@ namespace Asteroids
         [SerializeField] int health = 2;
         [SerializeField] int scorePoints = 1;
         [SerializeField] int rotationSpeed = 100;
-        [SerializeField, Range(0,100)] int chanceToDropPowerUp;
+        [SerializeField, Range(0,100)] internal int chanceToDropPowerUp;
         [SerializeField] [AssetsOnly] GameObject destroyPrefab;
         [SerializeField] public List<GameObject> powerUps = new List<GameObject>();
         Vector2 _originLookDir;

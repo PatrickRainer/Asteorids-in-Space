@@ -23,7 +23,7 @@ namespace Asteroids
         public void DropRandomPowerUp(Asteroid asteroid)
         {
             // Debug.Log("Power up dropper reacts to android destroy");
-            var dropAtAll = _random.Next(0, 100) > 50;
+            var dropAtAll = _random.Next(0, 100) <= asteroid.chanceToDropPowerUp;
 
             if (dropAtAll)
             {
