@@ -15,7 +15,9 @@ namespace Spaceships
         [SerializeField] float shootingInterval = 0.3f;
         [SerializeField] float rotationDeadZone = 0.2f;
         [SerializeField] float rotationSpeed = 200f;
-        [SerializeField] [Required] Transform bulletAnchor;
+        [SerializeField, Required, SceneObjectsOnly] Transform bulletAnchorMiddle;
+        [SerializeField, Required, SceneObjectsOnly] Transform bulletAnchorLeft;
+        [SerializeField, Required, SceneObjectsOnly] Transform bulletAnchorRight;
 
 
         [SerializeField] [AssetsOnly] [Required]
@@ -32,6 +34,7 @@ namespace Spaceships
         Rigidbody2D _rb;
         bool _isThrottling;
         bool _isRotating = true;
+       [SerializeField] int _activeBulletAnchors = 1;
 
         void Start()
         {
@@ -151,11 +154,32 @@ namespace Spaceships
 
         void ShootBullet()
         {
+            Vector3 bulletMiddlePos= bulletAnchorMiddle.transform.position;
+            Vector3 bulletLeftPos = bulletAnchorLeft.transform.position;
+            Vector3 bulletRightPos = bulletAnchorRight.transform.position;
+            
+            
             if (_currentShootInterval <= 0)
             {
-               var bulletStartPos = bulletAnchor.transform.position;
-                Instantiate(bullet, bulletStartPos, transform.rotation);
-                _currentShootInterval = shootingInterval;
+                switch (_activeBulletAnchors)
+                {
+                    case 1:
+                        Instantiate(bullet, bulletMiddlePos, transform.rotation);
+                        _currentShootInterval = shootingInterval;
+                        break;
+                    case 2:
+                        Instantiate(bullet, bulletLeftPos, transform.rotation);
+                        Instantiate(bullet, bulletRightPos, transform.rotation);
+                        _currentShootInterval = shootingInterval;
+                        break;
+                    case 3:
+                        Instantiate(bullet, bulletMiddlePos, transform.rotation);
+                        Instantiate(bullet, bulletLeftPos, transform.rotation);
+                        Instantiate(bullet, bulletRightPos, transform.rotation);
+                        _currentShootInterval = shootingInterval;
+                        break;
+                }
+
             }
         }
 
