@@ -146,6 +146,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 2
   scorePoints: 1
+  damage: 1
+  canHitPlayerShip: 1
+  canHitShield: 0
   rotationSpeed: 100
   chanceToDropPowerUp: 50
   destroyPrefab: {fileID: 8040424817460185181, guid: 734ac008105c1b14eb8a909cdbde75da,

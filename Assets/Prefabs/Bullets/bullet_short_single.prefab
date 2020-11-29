@@ -135,8 +135,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2f7abdad40b4a689c1b813cbe676282, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocity: {x: 0, y: 3}
+  health: 2
+  scorePoints: 1
   damage: 1
+  canHitPlayerShip: 1
+  canHitShield: 1
+  speed: 5
 --- !u!82 &-519073055103869357
 AudioSource:
   m_ObjectHideFlags: 0

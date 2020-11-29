@@ -1,4 +1,5 @@
 using System;
+using CoreMechanics;
 using CoreMechanics.InputSystem;
 using GameManagers;
 using Sirenix.OdinInspector;
@@ -90,13 +91,14 @@ namespace Spaceships
         void OnTriggerEnter2D(Collider2D other)
         {
             var collidingObject = other.gameObject;
-
+            var damageInfo = collidingObject.GetComponent<FloatingObject>();
+          
+            
             if (collidingObject.GetInstanceID() == _colObjID) return; // Same Object collided twice
 
             _colObjID = collidingObject.GetInstanceID();
 
-            if (collidingObject.layer == 11) return;
-            if (collidingObject.CompareTag("PowerUp")) return;
+            if (!damageInfo.canHitPlayerShip) return;
 
 
             //Debug.Log("Collision with SpaceShip");

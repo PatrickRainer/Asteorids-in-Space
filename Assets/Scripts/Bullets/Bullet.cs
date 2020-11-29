@@ -5,9 +5,8 @@ using UnityEngine;
 namespace Bullets
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class Bullet : MonoBehaviour
+    public class Bullet : FloatingObject
     {
-        [SerializeField] internal int damage = 1;
         [SerializeField] int speed = 5;
 
         Rigidbody2D _rb;

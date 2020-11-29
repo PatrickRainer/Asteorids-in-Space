@@ -1,16 +1,16 @@
 using System.Collections.Generic;
 using Bullets;
+using CoreMechanics;
 using GameManagers;
+using PowerUps;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;
 
 namespace Asteroids
 {
-    public class Asteroid : MonoBehaviour
+    public class Asteroid : FloatingObject
     {
-        [SerializeField] int health = 2;
-        [SerializeField] int scorePoints = 1;
         [SerializeField] int rotationSpeed = 100;
         [SerializeField, Range(0,100)] int chanceToDropPowerUp;
         [SerializeField] [AssetsOnly] GameObject destroyPrefab;
