@@ -147,7 +147,7 @@ MonoBehaviour:
   health: 2
   scorePoints: 1
   rotationSpeed: 100
-  chanceToDropPowerUp: 50
+  chanceToDropPowerUp: 100
   destroyPrefab: {fileID: 8040424817460185181, guid: 734ac008105c1b14eb8a909cdbde75da,
     type: 3}
   powerUps:
