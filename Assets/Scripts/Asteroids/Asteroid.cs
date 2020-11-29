@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Bullets;
 using GameManagers;
 using Sirenix.OdinInspector;
@@ -11,8 +12,11 @@ namespace Asteroids
         [SerializeField] int health = 2;
         [SerializeField] int scorePoints = 1;
         [SerializeField] int rotationSpeed = 100;
+        [SerializeField, Range(0,100)] int chanceToDropPowerUp;
         [SerializeField] [AssetsOnly] GameObject destroyPrefab;
+        [SerializeField] public List<GameObject> powerUps = new List<GameObject>();
         Vector2 _originLookDir;
+        PowerUpDropper _powerUpDropper;
         Rigidbody2D _rb;
 
         Rotator _rotator;
@@ -20,6 +24,9 @@ namespace Asteroids
         void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
+
+            _powerUpDropper = gameObject.AddComponent<PowerUpDropper>();
+            _powerUpDropper.Init(this);
         }
 
         protected void Start()
@@ -44,6 +51,8 @@ namespace Asteroids
         void OnDestroy()
         {
             if (GameManager.IsSceneUnloading) return;
+
+            _powerUpDropper.DropRandomPowerUp(this);
 
             if (!(destroyPrefab is null)) Instantiate(destroyPrefab, transform.position, quaternion.identity);
 
