@@ -34,7 +34,7 @@ namespace Spaceships
         Rigidbody2D _rb;
         bool _isThrottling;
         bool _isRotating = true;
-       [SerializeField] int _activeBulletAnchors = 1;
+        internal int _activeBulletAnchors = 1;
 
         void Start()
         {
