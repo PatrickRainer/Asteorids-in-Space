@@ -1,8 +1,9 @@
-using Asteroids;
+using System.Collections.Generic;
+using GameManagers;
 using UnityEngine;
 using Random = System.Random;
 
-namespace PowerUps
+namespace Asteroids
 
 
 {

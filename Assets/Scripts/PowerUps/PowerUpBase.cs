@@ -1,12 +1,11 @@
 using System.Runtime.InteropServices.WindowsRuntime;
-using CoreMechanics;
 using GameManagers;
 using Spaceships;
 using UnityEngine;
 
 namespace PowerUps
 {
-    public abstract class PowerUpBase : FloatingObject
+    public abstract class PowerUpBase : MonoBehaviour
     {
         int _lastTriggered;
        protected GameManager GameManager;
