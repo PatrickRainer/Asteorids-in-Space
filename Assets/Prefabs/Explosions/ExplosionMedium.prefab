@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8040424817460185180}
   - component: {fileID: -5453814137250462857}
   - component: {fileID: 3087938294747815068}
-  m_Layer: 0
+  m_Layer: 1
   m_Name: ExplosionMedium
   m_TagString: Untagged
   m_Icon: {fileID: 0}

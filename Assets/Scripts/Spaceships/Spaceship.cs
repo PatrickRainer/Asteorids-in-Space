@@ -95,8 +95,9 @@ namespace Spaceships
 
             _colObjID = collidingObject.GetInstanceID();
 
-            if (collidingObject.layer == 11) return;
-            if (collidingObject.CompareTag("PowerUp")) return;
+            if (collidingObject.layer != LayerMask.NameToLayer("EnemyObjects")) return;
+            // if (collidingObject.layer == 11) return;
+            // if (collidingObject.CompareTag("PowerUp")) return;
 
 
             //Debug.Log("Collision with SpaceShip");

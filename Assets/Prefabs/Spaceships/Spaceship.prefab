@@ -99,8 +99,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 1
   m_Mass: 0.64000005
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_LinearDrag: 0.5
+  m_AngularDrag: 0.5
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
@@ -146,10 +146,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 1
-  velocity: 5
-  bullet: {fileID: 590942261726067872, guid: a3f3dc3cf1ae1d941abd3029c0eb44c5, type: 3}
-  bulletAnchor: {fileID: 2113555128161859952}
+  maxThrottle: 3
+  throttleSensibility: 1
+  throttleDecreaseSensibility: 3
   shootingInterval: 0.3
+  rotationDeadZone: 0.2
+  rotationSpeed: 200
+  bulletAnchor: {fileID: 2113555128161859952}
+  bullet: {fileID: 590942261726067872, guid: a3f3dc3cf1ae1d941abd3029c0eb44c5, type: 3}
   destroyEffects: {fileID: 5929485630944672381, guid: c08f0fb2b14c3db4cb81acccac8781ea,
     type: 3}
 --- !u!61 &286178079

@@ -15,9 +15,9 @@ GameObject:
   - component: {fileID: 7234497443138232287}
   - component: {fileID: -519073055103869357}
   - component: {fileID: 5839917537635306379}
-  m_Layer: 9
-  m_Name: bullet_short_single
-  m_TagString: Untagged
+  m_Layer: 10
+  m_Name: BulletBase
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -135,8 +135,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2f7abdad40b4a689c1b813cbe676282, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocity: {x: 0, y: 3}
   damage: 1
+  speed: 5
 --- !u!82 &-519073055103869357
 AudioSource:
   m_ObjectHideFlags: 0
