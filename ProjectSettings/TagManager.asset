@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - PowerUp
+  - Shield
+  - Weapon
   layers:
   - Default
   - TransparentFX
@@ -14,13 +16,13 @@ TagManager:
   - UI
   - 
   - 
-  - Asteroids
-  - Bullets
-  - Player
+  - 
+  - 
+  - PlayerObjects
   - Wall
-  - PowerUps
   - 
-  - 
+  - EnemyObjects
+  - NeutralObjects
   - 
   - 
   - 

@@ -67,7 +67,7 @@ namespace Asteroids
 
             if (other.CompareTag("Player")) health -= 1;
 
-            if (colObj.layer == 9) //Bullet
+            if (colObj.layer == LayerMask.NameToLayer("PlayerObjects") && colObj.CompareTag("Weapon"))
             {
                 var bullet = other.GetComponent<Bullet>();
                 health -= bullet.damage;
