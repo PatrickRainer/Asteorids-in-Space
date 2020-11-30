@@ -69,8 +69,8 @@ namespace Asteroids
 
             if (colObj.layer == LayerMask.NameToLayer("PlayerObjects") && colObj.CompareTag("Weapon"))
             {
-                var bullet = other.GetComponent<Bullet>();
-                health -= bullet.damage;
+                var weapon = other.GetComponent<WeaponBase>();
+                health -= weapon.damage;
             }
 
             if (health <= 0) Destroy(gameObject);

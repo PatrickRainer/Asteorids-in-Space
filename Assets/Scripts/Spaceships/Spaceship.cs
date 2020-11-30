@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using CoreMechanics.InputSystem;
 using GameManagers;
 using Sirenix.OdinInspector;
@@ -34,7 +35,8 @@ namespace Spaceships
         Rigidbody2D _rb;
         bool _isThrottling;
         bool _isRotating = true;
-        internal int _activeBulletAnchors = 1;
+        internal int ActiveBulletAnchors = 1;
+        List<GameObject> _loadedRockets = new List<GameObject>();
 
         void Start()
         {
@@ -161,7 +163,7 @@ namespace Spaceships
             
             if (_currentShootInterval <= 0)
             {
-                switch (_activeBulletAnchors)
+                switch (ActiveBulletAnchors)
                 {
                     case 1:
                         Instantiate(bullet, bulletMiddlePos, transform.rotation);
@@ -186,6 +188,23 @@ namespace Spaceships
         public float GetCurrentThrottlePercentage()
         {
             return 100 / maxThrottle * _currentThrottle / 100;
+        }
+
+        [Button]
+        public void ShootNextRocket()
+        {
+            if(_loadedRockets.Count==0) return;
+
+            var lastRocketIndex = _loadedRockets.Count - 1;
+
+            Instantiate(_loadedRockets[lastRocketIndex], bulletAnchorMiddle.position, Quaternion.identity);
+            _loadedRockets.RemoveAt(lastRocketIndex);
+        }
+
+        [Button]
+        public void AddRocketToLoad(GameObject rocket)
+        {
+            _loadedRockets.Add(rocket);
         }
     }
 }
