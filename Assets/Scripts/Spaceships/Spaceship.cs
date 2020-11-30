@@ -206,5 +206,10 @@ namespace Spaceships
         {
             _loadedRockets.Add(rocket);
         }
+
+        public int GetRocketLoadCount()
+        {
+           return _loadedRockets.Count;
+        }
     }
 }

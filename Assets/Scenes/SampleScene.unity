@@ -1297,6 +1297,7 @@ MonoBehaviour:
   livesText: {fileID: 362090717}
   gameOverPanel: {fileID: 1905432072}
   throttleBar: {fileID: 1203898131}
+  rocketCounterText: {fileID: 2107710421}
 --- !u!1 &806777913
 GameObject:
   m_ObjectHideFlags: 0

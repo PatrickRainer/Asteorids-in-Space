@@ -15,6 +15,7 @@ namespace Ui
        [SerializeField, Required] TextMeshProUGUI livesText;
        [SerializeField, Required] GameObject gameOverPanel;
        [SerializeField, Required] Image throttleBar;
+       [SerializeField, Required] TextMeshProUGUI rocketCounterText;
 
        Spaceship _currentSpaceship;
 
@@ -31,6 +32,7 @@ namespace Ui
            if (_currentSpaceship != null)
            {
                throttleBar.fillAmount = _currentSpaceship.GetCurrentThrottlePercentage();
+               rocketCounterText.text = _currentSpaceship.GetRocketLoadCount().ToString();
            }
            else
            {
