@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using CoreMechanics.InputSystem;
 using GameManagers;
@@ -16,9 +15,15 @@ namespace Spaceships
         [SerializeField] float shootingInterval = 0.3f;
         [SerializeField] float rotationDeadZone = 0.2f;
         [SerializeField] float rotationSpeed = 200f;
-        [SerializeField, Required, SceneObjectsOnly] Transform bulletAnchorMiddle;
-        [SerializeField, Required, SceneObjectsOnly] Transform bulletAnchorLeft;
-        [SerializeField, Required, SceneObjectsOnly] Transform bulletAnchorRight;
+
+        [SerializeField] [Required] [SceneObjectsOnly]
+        Transform bulletAnchorMiddle;
+
+        [SerializeField] [Required] [SceneObjectsOnly]
+        Transform bulletAnchorLeft;
+
+        [SerializeField] [Required] [SceneObjectsOnly]
+        Transform bulletAnchorRight;
 
 
         [SerializeField] [AssetsOnly] [Required]
@@ -32,11 +37,11 @@ namespace Spaceships
         [ShowInInspector] [ReadOnly] float _currentThrottle;
         GameManager _gameManager;
         InputListener _input;
-        Rigidbody2D _rb;
-        bool _isThrottling;
         bool _isRotating = true;
+        bool _isThrottling;
+        readonly List<GameObject> _loadedRockets = new List<GameObject>();
+        Rigidbody2D _rb;
         internal int ActiveBulletAnchors = 1;
-        List<GameObject> _loadedRockets = new List<GameObject>();
 
         void Start()
         {
@@ -54,12 +59,6 @@ namespace Spaceships
             _input.RotateButtonDown += delegate { _isRotating = !_isRotating; };
         }
 
-        void OnEnable()
-        {
-
-            
-        }
-
         void Update()
         {
             _currentShootInterval -= Time.deltaTime;
@@ -69,11 +68,11 @@ namespace Spaceships
         {
             _rb.MovePosition(transform.position + transform.up * (Time.fixedDeltaTime * _currentThrottle));
 
-            if (!_isThrottling)
-            {
-               DecreaseThrottle(); 
-            }
-            
+            if (!_isThrottling) DecreaseThrottle();
+        }
+
+        void OnEnable()
+        {
         }
 
         void OnDisable()
@@ -121,9 +120,9 @@ namespace Spaceships
         void RotateToMousePosition(Vector3 mousePos)
         {
             if (!_isRotating) return;
-            
+
             if (!MouseListener.IsMouseOnScreen()) return;
-            
+
             var relativeMousePos = transform.InverseTransformPoint(mousePos);
             var isMouseInDeadZone =
                 relativeMousePos.x > 0f - rotationDeadZone && relativeMousePos.x < 0f + rotationDeadZone;
@@ -156,13 +155,12 @@ namespace Spaceships
 
         void ShootBullet()
         {
-            Vector3 bulletMiddlePos= bulletAnchorMiddle.transform.position;
-            Vector3 bulletLeftPos = bulletAnchorLeft.transform.position;
-            Vector3 bulletRightPos = bulletAnchorRight.transform.position;
-            
-            
+            var bulletMiddlePos = bulletAnchorMiddle.transform.position;
+            var bulletLeftPos = bulletAnchorLeft.transform.position;
+            var bulletRightPos = bulletAnchorRight.transform.position;
+
+
             if (_currentShootInterval <= 0)
-            {
                 switch (ActiveBulletAnchors)
                 {
                     case 1:
@@ -181,8 +179,6 @@ namespace Spaceships
                         _currentShootInterval = shootingInterval;
                         break;
                 }
-
-            }
         }
 
         public float GetCurrentThrottlePercentage()
@@ -193,7 +189,7 @@ namespace Spaceships
         [Button]
         public void ShootNextRocket()
         {
-            if(_loadedRockets.Count==0) return;
+            if (_loadedRockets.Count == 0) return;
 
             var lastRocketIndex = _loadedRockets.Count - 1;
 
@@ -209,7 +205,7 @@ namespace Spaceships
 
         public int GetRocketLoadCount()
         {
-           return _loadedRockets.Count;
+            return _loadedRockets.Count;
         }
     }
 }
