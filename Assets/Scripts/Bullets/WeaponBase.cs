@@ -7,12 +7,12 @@ namespace Bullets
     public abstract class WeaponBase : MonoBehaviour
     {
         [SerializeField] internal int damage = 1;
-        [SerializeField] int speed = 5;
+        [SerializeField] protected int speed = 5;
 
         [SerializeField] [AssetsOnly] [Required]
         GameObject destroyEffect;
 
-        Rigidbody2D _rb;
+        protected Rigidbody2D _rb;
 
         protected virtual void Awake()
         {
