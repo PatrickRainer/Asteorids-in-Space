@@ -13,7 +13,6 @@ namespace Bullets
         GameObject destroyEffect;
 
         Rigidbody2D _rb;
-        [SerializeField, AssetsOnly, Required] GameObject destroyEffect;
 
         protected virtual void Awake()
         {

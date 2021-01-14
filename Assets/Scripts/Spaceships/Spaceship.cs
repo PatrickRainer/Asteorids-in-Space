@@ -193,7 +193,7 @@ namespace Spaceships
 
             var lastRocketIndex = _loadedRockets.Count - 1;
 
-            Instantiate(_loadedRockets[lastRocketIndex], bulletAnchorMiddle.position, Quaternion.identity);
+            Instantiate(_loadedRockets[lastRocketIndex], bulletAnchorMiddle.position, bulletAnchorMiddle.rotation);
             _loadedRockets.RemoveAt(lastRocketIndex);
         }
 
