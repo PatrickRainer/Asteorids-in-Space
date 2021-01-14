@@ -187,7 +187,7 @@ namespace Spaceships
         }
 
         [Button]
-        public void ShootNextRocket()
+        public void ShootNextRocket() // TODO: How to shoot the rocket?
         {
             if (_loadedRockets.Count == 0) return;
 
