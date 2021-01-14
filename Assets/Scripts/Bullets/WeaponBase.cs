@@ -8,6 +8,10 @@ namespace Bullets
     {
         [SerializeField] internal int damage = 1;
         [SerializeField] int speed = 5;
+
+        [SerializeField] [AssetsOnly] [Required]
+        GameObject destroyEffect;
+
         Rigidbody2D _rb;
         [SerializeField, AssetsOnly, Required] GameObject destroyEffect;
 
@@ -21,19 +25,25 @@ namespace Bullets
             Move();
         }
 
+       protected virtual void OnDestroy()
+        {
+            if (destroyEffect == null) return;
+
+            Instantiate((Object) destroyEffect, transform.position, quaternion.identity);
+        }
+
+        protected virtual void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.CompareTag("Player")) return;
+            if (other.CompareTag("PowerUp")) return;
+
+            Destroy(gameObject);
+        }
+
         protected virtual void Move()
         {
             var trf = transform;
             _rb.MovePosition(trf.position + trf.up * (Time.fixedDeltaTime * speed));
-        }
-
-        protected abstract void OnTriggerEnter2D(Collider2D other);
-
-        void OnDestroy()
-        {
-            if (destroyEffect==null) return;
-            
-            Instantiate((Object) destroyEffect, transform.position, quaternion.identity);
         }
     }
 }

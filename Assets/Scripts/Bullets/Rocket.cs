@@ -5,13 +5,9 @@ using UnityEngine;
 
 namespace Bullets
 {
+    [RequireComponent(typeof(Rigidbody2D))]
     public class Rocket : WeaponBase
     {
-        protected override void OnTriggerEnter2D(Collider2D other)
-        {
-            if (other.gameObject.layer == gameObject.layer) return;
-            
-            Destroy(gameObject);
-        }
+
     }
 }
