@@ -5,15 +5,15 @@ using UnityEngine.Serialization;
 
 namespace PowerUps
 {
-    class RocketPowerUp : PowerUpBase
+    public class MissilePowerUp : PowerUpBase
     {
-        [SerializeField, AssetsOnly, Required] GameObject rocketPrefab;
-
+        [SerializeField, AssetsOnly, Required] GameObject missilePrefab;
+        
         protected override void PowerUpAction()
         {
             var playerShip = FindObjectOfType<Spaceship>();
-
-            playerShip.AddRocketToLoad(rocketPrefab); //TODO: Shall we split Rockets and Missiles to a different load?
+            
+            playerShip.AddRocketToLoad(missilePrefab);
         }
     }
 }

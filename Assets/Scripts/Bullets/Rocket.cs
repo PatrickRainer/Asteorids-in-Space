@@ -8,6 +8,6 @@ namespace Bullets
     [RequireComponent(typeof(Rigidbody2D))]
     public class Rocket : WeaponBase
     {
-
+        //BUG: Moves into the wrong direction
     }
 }
