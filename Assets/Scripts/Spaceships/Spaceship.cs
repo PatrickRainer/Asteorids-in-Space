@@ -41,7 +41,7 @@ namespace Spaceships
         bool _isThrottling;
         readonly List<GameObject> _loadedRockets = new List<GameObject>();
         Rigidbody2D _rb;
-        internal int ActiveBulletAnchors = 1;
+        internal int ActiveCannons = 1;
 
         void Start()
         {
@@ -161,7 +161,7 @@ namespace Spaceships
 
 
             if (_currentShootInterval <= 0)
-                switch (ActiveBulletAnchors)
+                switch (ActiveCannons)
                 {
                     case 1:
                         Instantiate(bullet, bulletMiddlePos, transform.rotation);

@@ -8,7 +8,7 @@ namespace PowerUps
         protected override void PowerUpAction()
         {
            var playerShip = GameObject.FindObjectOfType<Spaceship>();
-           playerShip.ActiveBulletAnchors = Mathf.Clamp(playerShip.ActiveBulletAnchors + 1, 1, 3);
+           playerShip.ActiveCannons = Mathf.Clamp(playerShip.ActiveCannons + 1, 1, 3);
         }
     }
 }
