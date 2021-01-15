@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using DG.Tweening;
+using Extensions;
 using Sirenix.OdinInspector;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Bullets
@@ -8,7 +10,10 @@ namespace Bullets
     public class ClusterBomb : WeaponBase
     {
         [SerializeField] [Required] [AssetsOnly]
-        List<GameObject> clusters = new List<GameObject>();
+        GameObject miniCluster;
+        
+        [SerializeField] [Required]  [SceneObjectsOnly]
+        List<Transform> miniClusterPositions = new List<Transform>(); 
 
         Vector2 _startPosition;
         Vector2 _endPosition; //Should move until this position and then stop
@@ -26,15 +31,19 @@ namespace Bullets
 
         protected override void OnDestroy()
         {
-            base.OnDestroy();
+            //Create mini clusters
+            foreach (var position in miniClusterPositions)
+            {
+                var go = Instantiate(miniCluster, position.position, Quaternion.identity);
+            }
 
-            //TODO: Shoot the single clusters in all directions
+            _rb.AddExplosionForce(3, transform.position, 3);
+
+            base.OnDestroy();
         }
 
         protected override void Move()
         {
-            // percentOfWay += Time.fixedDeltaTime;
-            // transform.position = Vector2.Lerp(_startPosition, _endPosition, percentOfWay);
             _rb.DOMove(_endPosition, 2);
         }
     }

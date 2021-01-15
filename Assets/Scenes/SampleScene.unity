@@ -1329,7 +1329,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   secondsUntilDifficultyIsIncreased: 3
   stepDifficultyIsRaised: 0.1
-  startLive: 3
+  startLive: 100
   startSpawnInterval: 4
   minSpawnInterval: 0.5
   spaceShip: {fileID: 2113555127576666628, guid: f34c5c0d2980c0742a4e278b78f67de6,
