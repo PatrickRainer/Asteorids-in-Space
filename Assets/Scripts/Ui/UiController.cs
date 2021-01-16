@@ -44,5 +44,23 @@ namespace Ui
        {
            gameOverPanel.SetActive(true);
        }
+
+       public void MissileButtonPressed()
+       {
+           Debug.Log("Missile button pressed!");
+           //TODO: Implement Missile Button
+       }
+       
+       public void RocketButtonPressed()
+       {
+           Debug.Log("Rocket button pressed!");
+           //TODO: Implement Rocket Button
+       }
+       
+       public void ClusterBombButtonPressed()
+       {
+           Debug.Log("Cluster bomb button pressed!");
+           //TODO: Implement Cluster bomb button
+       }
     }
 }
