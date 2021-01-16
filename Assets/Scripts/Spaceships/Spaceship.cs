@@ -13,31 +13,46 @@ namespace Spaceships
         #region Inspector Visible
 
         // Health //
-        [TabGroup("Health")]
+        [FoldoutGroup("Health")]
         [SerializeField] int health = 10;
         
         // Movement - Throttle//
-        [TabGroup("Movement")]
-        []
+        [FoldoutGroup("Movement")]
+        [HorizontalGroup("Movement/Horizontal")]
+        [BoxGroup("Movement/Horizontal/Throttling")]
         [SerializeField] float maxThrottle = 3;
+        [BoxGroup("Movement/Horizontal/Throttling")]
         [SerializeField] float throttleSensibility = 1;
+        [BoxGroup("Movement/Horizontal/Throttling")]
         [SerializeField] float throttleDecreaseSensibility = 3;
+        [BoxGroup("Movement/Horizontal/Throttling")]
         [ShowInInspector] [ReadOnly] float _currentThrottle;
         
         // Movement - Rotation //
+        [BoxGroup("Movement/Horizontal/Rotating")]
         [SerializeField] float rotationDeadZone = 0.2f;
+        [BoxGroup("Movement/Horizontal/Rotating")]
         [SerializeField] float rotationSpeed = 200f;
         
-        // Shooting //
+        // Shooting - Bullets //
+        [FoldoutGroup("Shooting")]
+        [BoxGroup("Shooting/Bullet Setup")]
         [SerializeField] float shootingInterval = 0.3f;
+        [BoxGroup("Shooting/Bullet Setup")]
         [SerializeField] [Required] [SceneObjectsOnly]
         Transform bulletAnchorMiddle;
+        [BoxGroup("Shooting/Bullet References")]
         [SerializeField] [Required] [SceneObjectsOnly]
         Transform bulletAnchorLeft;
+        [BoxGroup("Shooting/Bullet References")]
         [SerializeField] [Required] [SceneObjectsOnly]
         Transform bulletAnchorRight;
+        [BoxGroup("Shooting/Bullet References")]
         [SerializeField] [AssetsOnly] [Required]
         GameObject bullet;
+        
+        // Shooting - Other Weapons //
+        [BoxGroup("Shooting/Other Weapons")]
         [ShowInInspector, ReadOnly] readonly List<GameObject> _loadedRockets = new List<GameObject>();
        
         // Effects //
