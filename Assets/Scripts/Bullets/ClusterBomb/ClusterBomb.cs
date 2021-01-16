@@ -42,7 +42,7 @@ namespace Bullets
 
         protected override void Move()
         {
-            _rb.DOMove(_endPosition, clusterBombFlyingDuration);
+            _rb.DOMove(_endPosition, clusterBombFlyingDuration); // BUG: The Cluster Bomb moves into the wrong direction
         }
     }
 }

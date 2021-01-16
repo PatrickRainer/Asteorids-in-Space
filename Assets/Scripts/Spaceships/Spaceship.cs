@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Bullets;
 using CoreMechanics.InputSystem;
 using GameManagers;
@@ -56,6 +55,10 @@ namespace Spaceships
             _rb = GetComponent<Rigidbody2D>();
 
             _input.ShootButtonPressed += ShootBullet;
+            _input.MissileButtonPressed += ShootNextRocket<Missile>;
+            _input.RocketButtonPressed += ShootNextRocket<Rocket>;
+            _input.ClusterBombButtonPressed += ShootNextRocket<ClusterBomb>;
+            
             _input.ThrottleButtonPressed += IncreaseThrottle;
             _input.ThrottleButtonReleased += () => { _isThrottling = false; };
             _input.BrakeButtonPressed += DecreaseThrottle;
@@ -70,7 +73,8 @@ namespace Spaceships
 
         void FixedUpdate()
         {
-            _rb.MovePosition(transform.position + transform.up * (Time.fixedDeltaTime * _currentThrottle));
+            var trf = transform;
+            _rb.MovePosition(trf.position + trf.up * (Time.fixedDeltaTime * _currentThrottle));
 
             if (!_isThrottling) DecreaseThrottle();
         }
@@ -172,14 +176,16 @@ namespace Spaceships
                         _currentShootInterval = shootingInterval;
                         break;
                     case 2:
-                        Instantiate(bullet, bulletLeftPos, transform.rotation);
-                        Instantiate(bullet, bulletRightPos, transform.rotation);
+                        var rotation = transform.rotation;
+                        Instantiate(bullet, bulletLeftPos, rotation);
+                        Instantiate(bullet, bulletRightPos, rotation);
                         _currentShootInterval = shootingInterval;
                         break;
                     case 3:
-                        Instantiate(bullet, bulletMiddlePos, transform.rotation);
-                        Instantiate(bullet, bulletLeftPos, transform.rotation);
-                        Instantiate(bullet, bulletRightPos, transform.rotation);
+                        var rotation1 = transform.rotation;
+                        Instantiate(bullet, bulletMiddlePos, rotation1);
+                        Instantiate(bullet, bulletLeftPos, rotation1);
+                        Instantiate(bullet, bulletRightPos, rotation1);
                         _currentShootInterval = shootingInterval;
                         break;
                 }

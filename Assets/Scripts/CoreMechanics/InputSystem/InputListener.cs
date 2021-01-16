@@ -18,6 +18,11 @@ namespace CoreMechanics.InputSystem
         {
             /*Debug.Log("Shoot Key");*/
         };
+        
+        public UnityAction MissileButtonPressed = delegate { };
+        public UnityAction RocketButtonPressed = delegate { };
+        public UnityAction ClusterBombButtonPressed = delegate { };
+        
 
         public UnityAction ThrottleButtonPressed = delegate { };
         public UnityAction ThrottleButtonReleased = delegate { };
@@ -44,6 +49,10 @@ namespace CoreMechanics.InputSystem
             if (Input.GetKey(KeyCode.LeftAlt)) RotateButtonPressed.Invoke();
             if (Input.GetKeyUp(KeyCode.LeftAlt)) RotateButtonReleased.Invoke();
             if (Input.GetKeyDown(KeyCode.LeftAlt)) RotateButtonDown.Invoke();
+            
+            if(Input.GetKey(KeyCode.Alpha1)) MissileButtonPressed.Invoke();
+            if(Input.GetKey(KeyCode.Alpha2)) RocketButtonPressed.Invoke();
+            if(Input.GetKey(KeyCode.Alpha3)) ClusterBombButtonPressed.Invoke();
         }
     }
 }

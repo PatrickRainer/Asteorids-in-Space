@@ -5643,10 +5643,10 @@ MonoBehaviour:
   DisableButtonBetweenClicksInterval: 0.2
   DoubleClickRegisterInterval: 0.2
   InputData:
-    EnableAlternateInputs: 1
+    EnableAlternateInputs: 0
     InputMode: 2
-    KeyCode: 13
-    KeyCodeAlt: 32
+    KeyCode: 111
+    KeyCodeAlt: 258
     VirtualButtonName: Submit
     VirtualButtonNameAlt: Jump
   LongClickRegisterInterval: 0.5
