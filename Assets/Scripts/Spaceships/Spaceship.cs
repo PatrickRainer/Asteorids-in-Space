@@ -10,38 +10,49 @@ namespace Spaceships
 {
     public class Spaceship : MonoBehaviour
     {
+        #region Inspector Visible
+
+        // Health //
         [SerializeField] int health = 10;
+        
+        // Movement - Throttle//
         [SerializeField] float maxThrottle = 3;
         [SerializeField] float throttleSensibility = 1;
         [SerializeField] float throttleDecreaseSensibility = 3;
-        [SerializeField] float shootingInterval = 0.3f;
+        [ShowInInspector] [ReadOnly] float _currentThrottle;
+        
+        // Movement - Rotation //
         [SerializeField] float rotationDeadZone = 0.2f;
         [SerializeField] float rotationSpeed = 200f;
-
+        
+        // Shooting //
+        [SerializeField] float shootingInterval = 0.3f;
         [SerializeField] [Required] [SceneObjectsOnly]
         Transform bulletAnchorMiddle;
-
         [SerializeField] [Required] [SceneObjectsOnly]
         Transform bulletAnchorLeft;
-
         [SerializeField] [Required] [SceneObjectsOnly]
         Transform bulletAnchorRight;
-
-
         [SerializeField] [AssetsOnly] [Required]
         GameObject bullet;
-
+        [ShowInInspector, ReadOnly] readonly List<GameObject> _loadedRockets = new List<GameObject>();
+       
+        // Effects //
         [SerializeField] [AssetsOnly] [Required]
         GameObject destroyEffects;
 
+        #endregion
+
+
+
         int _colObjID;
         float _currentShootInterval;
-        [ShowInInspector] [ReadOnly] float _currentThrottle;
+
         GameManager _gameManager;
         InputListener _input;
         bool _isRotating = true;
         bool _isThrottling;
-        [ShowInInspector, ReadOnly] readonly List<GameObject> _loadedRockets = new List<GameObject>();
+
         Rigidbody2D _rb;
         internal int ActiveCannons = 1;
 
