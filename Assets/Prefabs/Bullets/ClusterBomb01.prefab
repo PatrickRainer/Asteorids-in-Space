@@ -116,6 +116,10 @@ MonoBehaviour:
   - {fileID: 203616065513253031}
   - {fileID: 3975066346762562763}
   - {fileID: 3094301439410826665}
+  flyingDistance: 3
+  miniClustersFlyingDistance: 20
+  miniClustersFlyingDuration: 4
+  clusterBombFlyingDuration: 1
 --- !u!1 &4996407590855136949
 GameObject:
   m_ObjectHideFlags: 0
