@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using Bullets;
 using CoreMechanics.InputSystem;
 using GameManagers;
 using Sirenix.OdinInspector;
@@ -39,9 +42,10 @@ namespace Spaceships
         InputListener _input;
         bool _isRotating = true;
         bool _isThrottling;
-        readonly List<GameObject> _loadedRockets = new List<GameObject>();
+        [ShowInInspector, ReadOnly] readonly List<GameObject> _loadedRockets = new List<GameObject>();
         Rigidbody2D _rb;
         internal int ActiveCannons = 1;
+
 
         void Start()
         {
@@ -205,7 +209,20 @@ namespace Spaceships
 
         public int GetRocketLoadCount()
         {
-            return _loadedRockets.Count;
+            var count = _loadedRockets.Count(o => o.GetComponent<Rocket>() != null);
+            return count;
+        }
+
+        public int GetMissileLoadCount()
+        {
+            var count = _loadedRockets.Count(o => o.GetComponent<Missile>() != null);
+            return count;
+        }
+
+        public int GetClusterBombLoadCount()
+        {
+            var count = _loadedRockets.Count(o => o.GetComponent<ClusterBomb>() != null);
+            return count;
         }
     }
 }

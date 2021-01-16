@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dfa9dd2874f44a5b28f7354ff98a219, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rocketPrefab: {fileID: 9168861219787445587, guid: cc48576c8a475884da3319cea1dd0ecd,
+  missilePrefab: {fileID: 9168861219787445587, guid: cc48576c8a475884da3319cea1dd0ecd,
     type: 3}
 --- !u!1001 &576473842043486734
 PrefabInstance:
@@ -24,7 +24,7 @@ PrefabInstance:
     - target: {fileID: 300575319914053744, guid: 5b4d891f99dee86439297883dcc3ad62,
         type: 3}
       propertyPath: m_Name
-      value: PowerUpRocket01
+      value: PowerUpMissile01
       objectReference: {fileID: 0}
     - target: {fileID: 300575319914053747, guid: 5b4d891f99dee86439297883dcc3ad62,
         type: 3}
