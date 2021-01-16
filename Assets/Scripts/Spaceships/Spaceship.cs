@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using CoreMechanics.InputSystem;
 using GameManagers;
 using Sirenix.OdinInspector;
@@ -15,7 +15,15 @@ namespace Spaceships
         [SerializeField] float shootingInterval = 0.3f;
         [SerializeField] float rotationDeadZone = 0.2f;
         [SerializeField] float rotationSpeed = 200f;
-        [SerializeField] [Required] Transform bulletAnchor;
+
+        [SerializeField] [Required] [SceneObjectsOnly]
+        Transform bulletAnchorMiddle;
+
+        [SerializeField] [Required] [SceneObjectsOnly]
+        Transform bulletAnchorLeft;
+
+        [SerializeField] [Required] [SceneObjectsOnly]
+        Transform bulletAnchorRight;
 
 
         [SerializeField] [AssetsOnly] [Required]
@@ -29,9 +37,11 @@ namespace Spaceships
         [ShowInInspector] [ReadOnly] float _currentThrottle;
         GameManager _gameManager;
         InputListener _input;
-        Rigidbody2D _rb;
-        bool _isThrottling;
         bool _isRotating = true;
+        bool _isThrottling;
+        readonly List<GameObject> _loadedRockets = new List<GameObject>();
+        Rigidbody2D _rb;
+        internal int ActiveCannons = 1;
 
         void Start()
         {
@@ -49,12 +59,6 @@ namespace Spaceships
             _input.RotateButtonDown += delegate { _isRotating = !_isRotating; };
         }
 
-        void OnEnable()
-        {
-
-            
-        }
-
         void Update()
         {
             _currentShootInterval -= Time.deltaTime;
@@ -64,11 +68,11 @@ namespace Spaceships
         {
             _rb.MovePosition(transform.position + transform.up * (Time.fixedDeltaTime * _currentThrottle));
 
-            if (!_isThrottling)
-            {
-               DecreaseThrottle(); 
-            }
-            
+            if (!_isThrottling) DecreaseThrottle();
+        }
+
+        void OnEnable()
+        {
         }
 
         void OnDisable()
@@ -116,9 +120,9 @@ namespace Spaceships
         void RotateToMousePosition(Vector3 mousePos)
         {
             if (!_isRotating) return;
-            
+
             if (!MouseListener.IsMouseOnScreen()) return;
-            
+
             var relativeMousePos = transform.InverseTransformPoint(mousePos);
             var isMouseInDeadZone =
                 relativeMousePos.x > 0f - rotationDeadZone && relativeMousePos.x < 0f + rotationDeadZone;
@@ -151,17 +155,57 @@ namespace Spaceships
 
         void ShootBullet()
         {
+            var bulletMiddlePos = bulletAnchorMiddle.transform.position;
+            var bulletLeftPos = bulletAnchorLeft.transform.position;
+            var bulletRightPos = bulletAnchorRight.transform.position;
+
+
             if (_currentShootInterval <= 0)
-            {
-               var bulletStartPos = bulletAnchor.transform.position;
-                Instantiate(bullet, bulletStartPos, transform.rotation);
-                _currentShootInterval = shootingInterval;
-            }
+                switch (ActiveCannons)
+                {
+                    case 1:
+                        Instantiate(bullet, bulletMiddlePos, transform.rotation);
+                        _currentShootInterval = shootingInterval;
+                        break;
+                    case 2:
+                        Instantiate(bullet, bulletLeftPos, transform.rotation);
+                        Instantiate(bullet, bulletRightPos, transform.rotation);
+                        _currentShootInterval = shootingInterval;
+                        break;
+                    case 3:
+                        Instantiate(bullet, bulletMiddlePos, transform.rotation);
+                        Instantiate(bullet, bulletLeftPos, transform.rotation);
+                        Instantiate(bullet, bulletRightPos, transform.rotation);
+                        _currentShootInterval = shootingInterval;
+                        break;
+                }
         }
 
         public float GetCurrentThrottlePercentage()
         {
             return 100 / maxThrottle * _currentThrottle / 100;
+        }
+
+        [Button]
+        public void ShootNextRocket() // TODO: How to shoot the rocket?
+        {
+            if (_loadedRockets.Count == 0) return;
+
+            var lastRocketIndex = _loadedRockets.Count - 1;
+
+            Instantiate(_loadedRockets[lastRocketIndex], bulletAnchorMiddle.position, bulletAnchorMiddle.rotation);
+            _loadedRockets.RemoveAt(lastRocketIndex);
+        }
+
+        [Button]
+        public void AddRocketToLoad(GameObject rocket)
+        {
+            _loadedRockets.Add(rocket);
+        }
+
+        public int GetRocketLoadCount()
+        {
+            return _loadedRockets.Count;
         }
     }
 }
