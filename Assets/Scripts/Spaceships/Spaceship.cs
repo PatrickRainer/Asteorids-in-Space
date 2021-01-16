@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using Bullets;
 using CoreMechanics.InputSystem;
 using GameManagers;
 using Sirenix.OdinInspector;
@@ -39,9 +42,10 @@ namespace Spaceships
         InputListener _input;
         bool _isRotating = true;
         bool _isThrottling;
-        readonly List<GameObject> _loadedRockets = new List<GameObject>();
+        [ShowInInspector, ReadOnly] readonly List<GameObject> _loadedRockets = new List<GameObject>();
         Rigidbody2D _rb;
         internal int ActiveCannons = 1;
+
 
         void Start()
         {
@@ -187,11 +191,12 @@ namespace Spaceships
         }
 
         [Button]
-        public void ShootNextRocket() // TODO: How to shoot the rocket?
+        public void ShootNextRocket<T>() where  T: WeaponBase // TODO: How to shoot the rocket?
         {
-            if (_loadedRockets.Count == 0) return;
-
-            var lastRocketIndex = _loadedRockets.Count - 1;
+            var lastRocketIndex = _loadedRockets.FindLastIndex(o => o.GetComponent<T>());
+            if (lastRocketIndex <=-1) return;
+            
+            //if (_loadedRockets.Count(o => GetComponent<T>()) == 0) return;
 
             Instantiate(_loadedRockets[lastRocketIndex], bulletAnchorMiddle.position, bulletAnchorMiddle.rotation);
             _loadedRockets.RemoveAt(lastRocketIndex);
@@ -205,7 +210,20 @@ namespace Spaceships
 
         public int GetRocketLoadCount()
         {
-            return _loadedRockets.Count;
+            var count = _loadedRockets.Count(o => o.GetComponent<Rocket>() != null);
+            return count;
+        }
+
+        public int GetMissileLoadCount()
+        {
+            var count = _loadedRockets.Count(o => o.GetComponent<Missile>() != null);
+            return count;
+        }
+
+        public int GetClusterBombLoadCount()
+        {
+            var count = _loadedRockets.Count(o => o.GetComponent<ClusterBomb>() != null);
+            return count;
         }
     }
 }
