@@ -1,4 +1,5 @@
 using System;
+using Bullets;
 using GameManagers;
 using Sirenix.OdinInspector;
 using Spaceships;
@@ -51,20 +52,17 @@ namespace Ui
 
        public void MissileButtonPressed()
        {
-           Debug.Log("Missile button pressed!");
-           //TODO: Implement Missile Button
+           _currentSpaceship.ShootNextRocket<Missile>();
        }
        
        public void RocketButtonPressed()
        {
-           Debug.Log("Rocket button pressed!");
-           //TODO: Implement Rocket Button
+           _currentSpaceship.ShootNextRocket<Rocket>();
        }
        
        public void ClusterBombButtonPressed()
        {
-           Debug.Log("Cluster bomb button pressed!");
-           //TODO: Implement Cluster bomb button
+           _currentSpaceship.ShootNextRocket<ClusterBomb>();
        }
     }
 }

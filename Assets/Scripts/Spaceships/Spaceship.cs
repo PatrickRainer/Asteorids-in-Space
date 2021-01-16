@@ -191,11 +191,12 @@ namespace Spaceships
         }
 
         [Button]
-        public void ShootNextRocket() // TODO: How to shoot the rocket?
+        public void ShootNextRocket<T>() where  T: WeaponBase // TODO: How to shoot the rocket?
         {
-            if (_loadedRockets.Count == 0) return;
-
-            var lastRocketIndex = _loadedRockets.Count - 1;
+            var lastRocketIndex = _loadedRockets.FindLastIndex(o => o.GetComponent<T>());
+            if (lastRocketIndex <=-1) return;
+            
+            //if (_loadedRockets.Count(o => GetComponent<T>()) == 0) return;
 
             Instantiate(_loadedRockets[lastRocketIndex], bulletAnchorMiddle.position, bulletAnchorMiddle.rotation);
             _loadedRockets.RemoveAt(lastRocketIndex);
