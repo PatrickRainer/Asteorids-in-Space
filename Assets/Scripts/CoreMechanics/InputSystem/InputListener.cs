@@ -37,17 +37,18 @@ namespace CoreMechanics.InputSystem
 
         void Update()
         {
-            if (Input.GetKey(KeyCode.Space)) ShootButtonPressed.Invoke();
             if (Input.GetMouseButton(0)) ShootButtonPressed.Invoke();
+            
 
             if (Input.GetKey(KeyCode.A)) LeftButtonPressed.Invoke();
             if (Input.GetKey(KeyCode.D)) RightButtonPressed.Invoke();
-            if (Input.GetKey(KeyCode.W)) ThrottleButtonPressed.Invoke();
-            if (Input.GetKeyUp(KeyCode.W)) ThrottleButtonReleased.Invoke();
+            if (Input.GetMouseButton(1)) ThrottleButtonPressed.Invoke();
+            if (Input.GetMouseButtonUp(1)) ThrottleButtonReleased.Invoke();
             if (Input.GetKey(KeyCode.S)) BrakeButtonPressed.Invoke();
             if (Input.GetKey(KeyCode.LeftAlt)) RotateButtonPressed.Invoke();
             if (Input.GetKeyUp(KeyCode.LeftAlt)) RotateButtonReleased.Invoke();
             if (Input.GetKeyDown(KeyCode.LeftAlt)) RotateButtonDown.Invoke();
+
             
             if(Input.GetKey(KeyCode.Alpha1)) MissileButtonPressed.Invoke();
             if(Input.GetKey(KeyCode.Alpha2)) RocketButtonPressed.Invoke();
