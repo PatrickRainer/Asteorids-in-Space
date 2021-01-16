@@ -13,9 +13,12 @@ namespace Spaceships
         #region Inspector Visible
 
         // Health //
+        [TabGroup("Health")]
         [SerializeField] int health = 10;
         
         // Movement - Throttle//
+        [TabGroup("Movement")]
+        []
         [SerializeField] float maxThrottle = 3;
         [SerializeField] float throttleSensibility = 1;
         [SerializeField] float throttleDecreaseSensibility = 3;
