@@ -1,5 +1,5 @@
+using System.Collections.Generic;
 using Bullets;
-using CoreMechanics;
 using GameManagers;
 using Sirenix.OdinInspector;
 using Unity.Mathematics;
@@ -7,31 +7,52 @@ using UnityEngine;
 
 namespace Asteroids
 {
-    public class Asteroid : StraightMover
+    public class Asteroid : MonoBehaviour
     {
         [SerializeField] int health = 2;
         [SerializeField] int scorePoints = 1;
         [SerializeField] int rotationSpeed = 100;
+        [SerializeField, Range(0,100)] internal int chanceToDropPowerUp;
         [SerializeField] [AssetsOnly] GameObject destroyPrefab;
+        [SerializeField] public List<GameObject> powerUps = new List<GameObject>();
+        Vector2 _originLookDir;
+        PowerUpDropper _powerUpDropper;
+        Rigidbody2D _rb;
 
         Rotator _rotator;
 
-
-        protected override void Start()
+        void Awake()
         {
-            base.Start();
-            _rotator = new Rotator(GetComponent<Rigidbody2D>(), rotationSpeed);
+            _rb = GetComponent<Rigidbody2D>();
+
+            _powerUpDropper = gameObject.AddComponent<PowerUpDropper>();
+            _powerUpDropper.Init(this);
         }
 
-        protected override void FixedUpdate()
+        protected void Start()
         {
-            base.FixedUpdate();
+            _rotator = new Rotator(GetComponent<Rigidbody2D>(), rotationSpeed);
+
+            // Look to middle of the screen
+            var dir = Vector3.zero - transform.position;
+            var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
+            _originLookDir = dir.normalized;
+        }
+
+        protected void FixedUpdate()
+        {
             _rotator.Rotate();
+
+            Move();
         }
 
         void OnDestroy()
         {
             if (GameManager.IsSceneUnloading) return;
+
+            _powerUpDropper.DropRandomPowerUp(this);
 
             if (!(destroyPrefab is null)) Instantiate(destroyPrefab, transform.position, quaternion.identity);
 
@@ -46,13 +67,19 @@ namespace Asteroids
 
             if (other.CompareTag("Player")) health -= 1;
 
-            if (colObj.layer == 9) //Bullet
+            if (colObj.layer == LayerMask.NameToLayer("PlayerObjects") && colObj.CompareTag("Weapon"))
             {
-                var bullet = other.GetComponent<Bullet>();
-                health -= bullet.damage;
+                var weapon = other.GetComponent<WeaponBase>();
+                health -= weapon.damage;
             }
 
             if (health <= 0) Destroy(gameObject);
+        }
+
+        void Move()
+        {
+            Vector2 dir = (Vector3.zero - transform.position).normalized;
+            _rb.MovePosition(_rb.position + _originLookDir * Time.fixedDeltaTime);
         }
     }
 }

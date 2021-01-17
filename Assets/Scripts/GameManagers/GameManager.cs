@@ -55,6 +55,11 @@ namespace GameManagers
                 FindObjectOfType<UiController>().ActivateGameOverPanel();
             }
         }
+        
+        public void IncreaseLives()
+        {
+            CurrentLives += 1;
+        }
 
         public static int GetLives()
         {

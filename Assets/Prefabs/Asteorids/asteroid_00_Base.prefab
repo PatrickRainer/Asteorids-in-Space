@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1436055828}
   - component: {fileID: 3440514566377713942}
   - component: {fileID: 5638663427458513470}
-  m_Layer: 8
+  m_Layer: 13
   m_Name: asteroid_00_Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b1dcb5a139e6ab34b8746098a8ea953a, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -82,7 +82,7 @@ SpriteRenderer:
   m_Size: {x: 0.8, y: 0.6}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!50 &-6785037539997825935
@@ -144,14 +144,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 462ae44fa4534f098546d4fdeb68d7e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocity: {x: 0, y: -1}
   health: 2
   scorePoints: 1
   rotationSpeed: 100
-  destroyAudioClip: {fileID: 8300000, guid: 7c15fcff30cfde145bd12eab3f9ae7f4, type: 3}
-  volume: 1000
+  chanceToDropPowerUp: 100
   destroyPrefab: {fileID: 8040424817460185181, guid: 734ac008105c1b14eb8a909cdbde75da,
     type: 3}
+  powerUps:
+  - {fileID: 5645829485099414762, guid: 1f82fba8e85ff8645a742292bf56ee7b, type: 3}
+  - {fileID: 4438987157563788255, guid: a80ef364e73218c4c877b73eb6c145bf, type: 3}
+  - {fileID: 2257301310818594810, guid: 467b9040fc1073446abaf531359984eb, type: 3}
+  - {fileID: 877023588076782206, guid: 7336570c449103640a0ae046e0255ee1, type: 3}
+  - {fileID: 877023588076782206, guid: b7b42d1158e28d949909c2cf11e5513f, type: 3}
+  - {fileID: 2751124086188419747, guid: ccf21108fe7c27a4d9360ae310b4e9c1, type: 3}
 --- !u!114 &5638663427458513470
 MonoBehaviour:
   m_ObjectHideFlags: 0
