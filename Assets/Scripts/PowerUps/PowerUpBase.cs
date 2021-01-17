@@ -1,6 +1,5 @@
 using System.Runtime.InteropServices.WindowsRuntime;
 using GameManagers;
-using Spaceships;
 using UnityEngine;
 
 namespace PowerUps

@@ -22,7 +22,23 @@ PrefabInstance:
     - target: {fileID: 300575319914053744, guid: 5b4d891f99dee86439297883dcc3ad62,
         type: 3}
       propertyPath: m_Name
-      value: PowerUpHearth01
+      value: PowerUpHealth01
+      objectReference: {fileID: 0}
+    - target: {fileID: 300575319914053747, guid: 5b4d891f99dee86439297883dcc3ad62,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 3410918491446568398, guid: 3a624672ead31134b82335655ff3c2b6,
+        type: 3}
+    - target: {fileID: 300575319914053747, guid: 5b4d891f99dee86439297883dcc3ad62,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 300575319914053747, guid: 5b4d891f99dee86439297883dcc3ad62,
+        type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 300575319914053748, guid: 5b4d891f99dee86439297883dcc3ad62,
         type: 3}

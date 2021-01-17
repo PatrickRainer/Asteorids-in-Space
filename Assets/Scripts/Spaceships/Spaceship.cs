@@ -1,6 +1,9 @@
-using System;
+using System.Collections.Generic;
+using System.Linq;
+using Bullets;
 using CoreMechanics.InputSystem;
 using GameManagers;
+using OdinCustom;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -8,30 +11,74 @@ namespace Spaceships
 {
     public class Spaceship : MonoBehaviour
     {
+        #region Inspector Visible
+
+        // Health //
+        [ColoredFoldoutGroup("Health", 0,1,0,1)]
         [SerializeField] int health = 10;
+        
+        // Movement - Throttle//
+        [ColoredFoldoutGroup("Movement", 0,0,1,1)]
+        [HorizontalGroup("Movement/Split")]
+        [BoxGroup("Movement/Split/Throttling")]
         [SerializeField] float maxThrottle = 3;
+        [BoxGroup("Movement/Split/Throttling")]
         [SerializeField] float throttleSensibility = 1;
+        [BoxGroup("Movement/Split/Throttling")]
         [SerializeField] float throttleDecreaseSensibility = 3;
-        [SerializeField] float shootingInterval = 0.3f;
+        [BoxGroup("Movement/Split/Throttling")]
+        [ShowInInspector] [ReadOnly] float _currentThrottle;
+        
+        // Movement - Rotation //
+        [BoxGroup("Movement/Split/Rotating")]
         [SerializeField] float rotationDeadZone = 0.2f;
+        [BoxGroup("Movement/Split/Rotating")]
         [SerializeField] float rotationSpeed = 200f;
-        [SerializeField] [Required] Transform bulletAnchor;
-
-
+        
+        // Weapons - Bullets - Setup //
+        [ColoredFoldoutGroup("Weapons",3,0,0,1)]
+        [VerticalGroup("Weapons/Split")]
+        [BoxGroup("Weapons/Split/Bullet Setup")]
+        [SerializeField] float shootingInterval = 0.3f;
+        
+        // Weapons - Bullets References //
+        [BoxGroup("Weapons/Split/Bullet References")]
+        [SerializeField] [Required] [ChildGameObjectsOnly]
+        Transform bulletAnchorMiddle;
+        [BoxGroup("Weapons/Split/Bullet References")]
+        [SerializeField] [Required] [ChildGameObjectsOnly]
+        Transform bulletAnchorLeft;
+        [BoxGroup("Weapons/Split/Bullet References")]
+        [SerializeField] [Required] [ChildGameObjectsOnly]
+        Transform bulletAnchorRight;
+        [BoxGroup("Weapons/Split/Bullet References")]
         [SerializeField] [AssetsOnly] [Required]
         GameObject bullet;
+        
+        // Weapons - Other Weapons //
+        [BoxGroup("Weapons/Split/Other Weapons")]
+        [ShowInInspector, ReadOnly] readonly List<GameObject> _loadedRockets = new List<GameObject>();
 
+        // Effects //
+        [ColoredFoldoutGroup("Effects", 1f,0,0,1)]
         [SerializeField] [AssetsOnly] [Required]
         GameObject destroyEffects;
 
+        #endregion
+
+
+
         int _colObjID;
         float _currentShootInterval;
-        [ShowInInspector] [ReadOnly] float _currentThrottle;
+
         GameManager _gameManager;
         InputListener _input;
-        Rigidbody2D _rb;
+        bool _isRotationActive = true;
         bool _isThrottling;
-        bool _isRotating = true;
+
+        Rigidbody2D _rb;
+        internal int ActiveCannons = 1;
+
 
         void Start()
         {
@@ -42,17 +89,15 @@ namespace Spaceships
             _rb = GetComponent<Rigidbody2D>();
 
             _input.ShootButtonPressed += ShootBullet;
+            _input.MissileButtonPressed += ShootNextRocket<Missile>;
+            _input.RocketButtonPressed += ShootNextRocket<Rocket>;
+            _input.ClusterBombButtonPressed += ShootNextRocket<ClusterBomb>;
+            
             _input.ThrottleButtonPressed += IncreaseThrottle;
             _input.ThrottleButtonReleased += () => { _isThrottling = false; };
             _input.BrakeButtonPressed += DecreaseThrottle;
             _input.MousePositionChanged += RotateToMousePosition;
-            _input.RotateButtonDown += delegate { _isRotating = !_isRotating; };
-        }
-
-        void OnEnable()
-        {
-
-            
+            _input.RotateButtonDown += delegate { _isRotationActive = !_isRotationActive; };
         }
 
         void Update()
@@ -62,13 +107,14 @@ namespace Spaceships
 
         void FixedUpdate()
         {
-            _rb.MovePosition(transform.position + transform.up * (Time.fixedDeltaTime * _currentThrottle));
+            var trf = transform;
+            _rb.MovePosition(trf.position + trf.up * (Time.fixedDeltaTime * _currentThrottle));
 
-            if (!_isThrottling)
-            {
-               DecreaseThrottle(); 
-            }
-            
+            if (!_isThrottling) DecreaseThrottle();
+        }
+
+        void OnEnable()
+        {
         }
 
         void OnDisable()
@@ -115,10 +161,10 @@ namespace Spaceships
 
         void RotateToMousePosition(Vector3 mousePos)
         {
-            if (!_isRotating) return;
-            
+            if (!_isRotationActive) return;
+
             if (!MouseListener.IsMouseOnScreen()) return;
-            
+
             var relativeMousePos = transform.InverseTransformPoint(mousePos);
             var isMouseInDeadZone =
                 relativeMousePos.x > 0f - rotationDeadZone && relativeMousePos.x < 0f + rotationDeadZone;
@@ -151,17 +197,71 @@ namespace Spaceships
 
         void ShootBullet()
         {
+            var bulletMiddlePos = bulletAnchorMiddle.transform.position;
+            var bulletLeftPos = bulletAnchorLeft.transform.position;
+            var bulletRightPos = bulletAnchorRight.transform.position;
+
+
             if (_currentShootInterval <= 0)
-            {
-               var bulletStartPos = bulletAnchor.transform.position;
-                Instantiate(bullet, bulletStartPos, transform.rotation);
-                _currentShootInterval = shootingInterval;
-            }
+                switch (ActiveCannons)
+                {
+                    case 1:
+                        Instantiate(bullet, bulletMiddlePos, transform.rotation);
+                        _currentShootInterval = shootingInterval;
+                        break;
+                    case 2:
+                        var rotation = transform.rotation;
+                        Instantiate(bullet, bulletLeftPos, rotation);
+                        Instantiate(bullet, bulletRightPos, rotation);
+                        _currentShootInterval = shootingInterval;
+                        break;
+                    case 3:
+                        var rotation1 = transform.rotation;
+                        Instantiate(bullet, bulletMiddlePos, rotation1);
+                        Instantiate(bullet, bulletLeftPos, rotation1);
+                        Instantiate(bullet, bulletRightPos, rotation1);
+                        _currentShootInterval = shootingInterval;
+                        break;
+                }
         }
 
         public float GetCurrentThrottlePercentage()
         {
             return 100 / maxThrottle * _currentThrottle / 100;
+        }
+        
+        public void ShootNextRocket<T>() where  T: WeaponBase // TODO: How to shoot the rocket?
+        {
+            var lastRocketIndex = _loadedRockets.FindLastIndex(o => o.GetComponent<T>());
+            if (lastRocketIndex <=-1) return;
+            
+            //if (_loadedRockets.Count(o => GetComponent<T>()) == 0) return;
+
+            Instantiate(_loadedRockets[lastRocketIndex], bulletAnchorMiddle.position, bulletAnchorMiddle.rotation);
+            _loadedRockets.RemoveAt(lastRocketIndex);
+        }
+        
+        public void AddRocketToLoad(GameObject rocket)
+        {
+            _loadedRockets.Add(rocket);
+        }
+
+        public int GetRocketLoadCount()
+        {
+            var count = _loadedRockets.Count(o => o.GetComponent<Rocket>() != null);
+            return count;
+        }
+
+        public int GetMissileLoadCount()
+        {
+            var count = _loadedRockets.Count(o => o.GetComponent<Missile>() != null);
+            return count;
+        }
+
+        public int GetClusterBombLoadCount()
+        {
+            var count = _loadedRockets.Count(o => o.GetComponent<ClusterBomb>() != null);
+            return count;
         }
     }
 }
