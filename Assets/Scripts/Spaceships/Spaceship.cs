@@ -3,6 +3,7 @@ using System.Linq;
 using Bullets;
 using CoreMechanics.InputSystem;
 using GameManagers;
+using OdinCustom;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -13,49 +14,53 @@ namespace Spaceships
         #region Inspector Visible
 
         // Health //
-        [FoldoutGroup("Health")]
+        [ColoredFoldoutGroup("Health", 0,1,0,1)]
         [SerializeField] int health = 10;
         
         // Movement - Throttle//
-        [FoldoutGroup("Movement")]
-        [HorizontalGroup("Movement/Horizontal")]
-        [BoxGroup("Movement/Horizontal/Throttling")]
+        [ColoredFoldoutGroup("Movement", 0,0,1,1)]
+        [HorizontalGroup("Movement/Split")]
+        [BoxGroup("Movement/Split/Throttling")]
         [SerializeField] float maxThrottle = 3;
-        [BoxGroup("Movement/Horizontal/Throttling")]
+        [BoxGroup("Movement/Split/Throttling")]
         [SerializeField] float throttleSensibility = 1;
-        [BoxGroup("Movement/Horizontal/Throttling")]
+        [BoxGroup("Movement/Split/Throttling")]
         [SerializeField] float throttleDecreaseSensibility = 3;
-        [BoxGroup("Movement/Horizontal/Throttling")]
+        [BoxGroup("Movement/Split/Throttling")]
         [ShowInInspector] [ReadOnly] float _currentThrottle;
         
         // Movement - Rotation //
-        [BoxGroup("Movement/Horizontal/Rotating")]
+        [BoxGroup("Movement/Split/Rotating")]
         [SerializeField] float rotationDeadZone = 0.2f;
-        [BoxGroup("Movement/Horizontal/Rotating")]
+        [BoxGroup("Movement/Split/Rotating")]
         [SerializeField] float rotationSpeed = 200f;
         
-        // Shooting - Bullets //
-        [FoldoutGroup("Shooting")]
-        [BoxGroup("Shooting/Bullet Setup")]
+        // Weapons - Bullets - Setup //
+        [ColoredFoldoutGroup("Weapons",3,0,0,1)]
+        [VerticalGroup("Weapons/Split")]
+        [BoxGroup("Weapons/Split/Bullet Setup")]
         [SerializeField] float shootingInterval = 0.3f;
-        [BoxGroup("Shooting/Bullet Setup")]
-        [SerializeField] [Required] [SceneObjectsOnly]
+        
+        // Weapons - Bullets References //
+        [BoxGroup("Weapons/Split/Bullet References")]
+        [SerializeField] [Required] [ChildGameObjectsOnly]
         Transform bulletAnchorMiddle;
-        [BoxGroup("Shooting/Bullet References")]
-        [SerializeField] [Required] [SceneObjectsOnly]
+        [BoxGroup("Weapons/Split/Bullet References")]
+        [SerializeField] [Required] [ChildGameObjectsOnly]
         Transform bulletAnchorLeft;
-        [BoxGroup("Shooting/Bullet References")]
-        [SerializeField] [Required] [SceneObjectsOnly]
+        [BoxGroup("Weapons/Split/Bullet References")]
+        [SerializeField] [Required] [ChildGameObjectsOnly]
         Transform bulletAnchorRight;
-        [BoxGroup("Shooting/Bullet References")]
+        [BoxGroup("Weapons/Split/Bullet References")]
         [SerializeField] [AssetsOnly] [Required]
         GameObject bullet;
         
-        // Shooting - Other Weapons //
-        [BoxGroup("Shooting/Other Weapons")]
+        // Weapons - Other Weapons //
+        [BoxGroup("Weapons/Split/Other Weapons")]
         [ShowInInspector, ReadOnly] readonly List<GameObject> _loadedRockets = new List<GameObject>();
-       
+
         // Effects //
+        [ColoredFoldoutGroup("Effects", 1f,0,0,1)]
         [SerializeField] [AssetsOnly] [Required]
         GameObject destroyEffects;
 
@@ -224,8 +229,7 @@ namespace Spaceships
         {
             return 100 / maxThrottle * _currentThrottle / 100;
         }
-
-        [Button]
+        
         public void ShootNextRocket<T>() where  T: WeaponBase // TODO: How to shoot the rocket?
         {
             var lastRocketIndex = _loadedRockets.FindLastIndex(o => o.GetComponent<T>());
@@ -236,8 +240,7 @@ namespace Spaceships
             Instantiate(_loadedRockets[lastRocketIndex], bulletAnchorMiddle.position, bulletAnchorMiddle.rotation);
             _loadedRockets.RemoveAt(lastRocketIndex);
         }
-
-        [Button]
+        
         public void AddRocketToLoad(GameObject rocket)
         {
             _loadedRockets.Add(rocket);
