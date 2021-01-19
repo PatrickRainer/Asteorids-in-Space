@@ -3,7 +3,7 @@ using System.Linq;
 using Bullets;
 using CoreMechanics.InputSystem;
 using GameManagers;
-using OdinCustom;
+using OdinAttributes;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
